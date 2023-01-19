@@ -16,7 +16,6 @@ class _IntervalsState extends State<Intervals> {
   late double longRestTime;
   late bool vibrate;
   late bool autoTimer;
-  late bool sound;
   late double soundValue;
   late final SharedPreferences shared;
   late final TextStyle titleStyle;
@@ -25,19 +24,25 @@ class _IntervalsState extends State<Intervals> {
   void initialise() {
     shared = SharedPrefs.instance;
     titleStyle = const TextStyle(
-        fontSize: 18,
-        color: Colors.white70,
-        fontWeight: FontWeight.w400);
-    descriptionStyle = titleStyle.copyWith(fontSize: 15,
-        color: Colors.white54,
-        fontWeight: FontWeight.w300);
+        fontSize: 18, color: Colors.white70, fontWeight: FontWeight.w400);
+    descriptionStyle = titleStyle.copyWith(
+        fontSize: 15, color: Colors.white54, fontWeight: FontWeight.w300);
     focusTime = shared.getDouble('focusTime') ?? 25;
     restTime = shared.getDouble('restTime') ?? 5;
     longRestTime = shared.getDouble('longRestTime') ?? 15;
     soundValue = shared.getDouble('soundValue') ?? 5;
     vibrate = shared.getBool('vibrate') ?? true;
-    sound = shared.getBool('sound') ?? true;
     autoTimer = shared.getBool('autoTimer') ?? true;
+  }
+
+  Future<bool> save() async {
+    var saved = false;
+    saved = await shared.setDouble('focusTime', focusTime);
+    saved = await shared.setDouble('restTime', restTime);
+    saved = await shared.setDouble('longRestTime', longRestTime);
+    saved = await shared.setBool('vibrate', vibrate);
+    saved = await shared.setBool('autoTimer', autoTimer);
+    return saved;
   }
 
   @override
@@ -51,9 +56,7 @@ class _IntervalsState extends State<Intervals> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Intervals'),
-        backgroundColor: Theme
-            .of(context)
-            .scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -63,8 +66,7 @@ class _IntervalsState extends State<Intervals> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Focus Duration',
-                  style: titleStyle),
+              Text('Focus Duration', style: titleStyle),
               Slider(
                   min: 5,
                   label: '${focusTime.toInt()} mins',
@@ -86,8 +88,7 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 32,
               ),
-              Text('Short Rest Duration',
-                  style: titleStyle),
+              Text('Short Rest Duration', style: titleStyle),
               Slider(
                   min: 0,
                   label: '${restTime.toInt()} mins',
@@ -109,8 +110,7 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 32,
               ),
-              Text('Long Rest Duration',
-                  style: titleStyle),
+              Text('Long Rest Duration', style: titleStyle),
               Slider(
                   min: 5,
                   label: '${longRestTime.toInt()} mins',
@@ -134,8 +134,7 @@ class _IntervalsState extends State<Intervals> {
               ),
               Row(
                 children: [
-                  Text('Auto Start Timer',
-                      style: titleStyle),
+                  Text('Auto Start Timer', style: titleStyle),
                   const Spacer(),
                   Switch(
                     value: autoTimer,
@@ -152,8 +151,7 @@ class _IntervalsState extends State<Intervals> {
               ),
               Row(
                 children: [
-                  Text('Enable Vibration',
-                      style: titleStyle),
+                  Text('Enable Vibration', style: titleStyle),
                   const Spacer(),
                   Switch(
                     value: vibrate,
@@ -166,9 +164,10 @@ class _IntervalsState extends State<Intervals> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24,),
-              Text('Sound Volume Percentage',
-                  style: titleStyle),
+              const SizedBox(
+                height: 24,
+              ),
+              Text('Sound Volume Percentage', style: titleStyle),
               Slider(
                   min: 0,
                   label: '${soundValue.toInt()}',
@@ -183,15 +182,26 @@ class _IntervalsState extends State<Intervals> {
                   }),
               Padding(
                 padding: const EdgeInsets.only(left: 30),
-                child: Text(
-                    '0 = No sound at all',
-                    style: descriptionStyle),
+                child: Text('0 = No sound at all', style: descriptionStyle),
               ),
               const SizedBox(
                 height: 32,
               ),
-              OutlinedButton(
-                  onPressed: () {},
+              ElevatedButton(
+                style: ButtonStyle(elevation: ),
+                  onPressed: () async {
+                    save().then((value) {
+                      if (value) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Settings saved successfully',
+                            style: titleStyle.copyWith(fontSize: 16),
+                          ),
+                          backgroundColor: Colors.indigo,
+                        ));
+                      }
+                    });
+                  },
                   child: const SizedBox(
                       width: 300,
                       height: 50,
@@ -209,5 +219,3 @@ class _IntervalsState extends State<Intervals> {
     );
   }
 }
-
-
