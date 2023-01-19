@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro/screens/interval_setting.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -23,8 +24,11 @@ class _SettingState extends State<Setting> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GestureDetector(
-              onTap: (){},
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>const Intervals()));
+
+              },
               child: Row(
                 children: const [
                   Text("Intervals",
@@ -43,8 +47,10 @@ class _SettingState extends State<Setting> {
             const SizedBox(height: 20,),
             Container(color: Colors.white12,height: 1,width: 300,),
             const SizedBox(height: 20,),
-            GestureDetector(
-              onTap: (){},
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>const Intervals()));
+              },
               child: Row(
                 children: const [
                   Text("Behaviour",

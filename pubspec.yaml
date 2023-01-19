@@ -39,7 +39,7 @@ dependencies:
   syncfusion_flutter_gauges:
   duration_picker:
   timelines: ^0.1.0
-  google_fonts:
+  vibration:
   shared_preferences:
   sqflite:
   sliding_clipped_nav_bar:

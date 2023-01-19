@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:pomodoro/data.dart';
 import 'package:pomodoro/homepage.dart';
+import 'package:pomodoro/screens/interval_setting.dart';
 
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize SharedPrefs instance.
+  await SharedPrefs.init();
   runApp(const MyApp());
 }
 
@@ -19,6 +24,11 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         fontFamily: "Sofia",
+        switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.all(Colors.white),
+            trackColor: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected) ? Colors.indigo : null)),
+        primaryColor: Colors.indigo,
         primarySwatch: Colors.indigo,
         brightness: Brightness.dark,
       ),
@@ -27,7 +37,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Ubuntu',
         primarySwatch: Colors.indigo,
       ),
-      home: const HomePage(),
+      home: const Intervals(),
     );
   }
 }
