@@ -66,7 +66,13 @@ class _IntervalsState extends State<Intervals> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Focus Duration', style: titleStyle),
+              Row(
+                children: [
+                  Text('Focus Duration', style: titleStyle),
+                  const Spacer(),
+                  Text('• ${focusTime.toInt()}      ', style: titleStyle),
+                ],
+              ),
               Slider(
                   min: 5,
                   label: '${focusTime.toInt()} mins',
@@ -88,7 +94,13 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 32,
               ),
-              Text('Short Rest Duration', style: titleStyle),
+              Row(
+                children: [
+                  Text('Short Rest Duration', style: titleStyle),
+                  const Spacer(),
+                  Text('• ${restTime.toInt()}      ', style: titleStyle),
+                ],
+              ),
               Slider(
                   min: 0,
                   label: '${restTime.toInt()} mins',
@@ -110,7 +122,13 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 32,
               ),
-              Text('Long Rest Duration', style: titleStyle),
+              Row(
+                children: [
+                  Text('Long Rest Duration', style: titleStyle),
+                  const Spacer(),
+                  Text('• ${longRestTime.toInt()}      ', style: titleStyle),
+                ],
+              ),
               Slider(
                   min: 5,
                   label: '${longRestTime.toInt()} mins',
@@ -157,7 +175,6 @@ class _IntervalsState extends State<Intervals> {
                     value: vibrate,
                     onChanged: (value) {
                       setState(() {
-                        Vibration.vibrate();
                         vibrate = value;
                       });
                     },
@@ -167,7 +184,13 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 24,
               ),
-              Text('Sound Volume Percentage', style: titleStyle),
+              Row(
+                children: [
+                  Text('Sound Volume Percentage', style: titleStyle),
+                  const Spacer(),
+                  Text('• ${soundValue.toInt()}      ', style: titleStyle),
+                ],
+              ),
               Slider(
                   min: 0,
                   label: '${soundValue.toInt()}',
@@ -192,8 +215,7 @@ class _IntervalsState extends State<Intervals> {
                     save().then((value) {
                       if (value) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          duration: const Duration(milliseconds: 1500
-                          ),
+                          duration: const Duration(milliseconds: 1500),
                           content: Text(
                             'Settings saved successfully',
                             style: titleStyle.copyWith(fontSize: 16),
@@ -204,7 +226,7 @@ class _IntervalsState extends State<Intervals> {
                     });
                   },
                   child: const SizedBox(
-                      width: 300,
+                      width: 400,
                       height: 50,
                       child: Center(
                         child: Text("Save",
