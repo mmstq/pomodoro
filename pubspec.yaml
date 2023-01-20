@@ -44,6 +44,7 @@ dependencies:
   shared_preferences:
   sqflite:
   sliding_clipped_nav_bar:
+  velocity_x:
 
 dev_dependencies:
   flutter_test:

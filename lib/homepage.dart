@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final PageController pageController = PageController();
   int index = 0;
-  final List<String> title = ['Focus', 'Tasks', 'Analytics', 'Setting'];
+  final List<String> title = ['Focus', 'Tasks', 'Analytics', 'Settings'];
 
   @override
   Widget build(BuildContext context) {

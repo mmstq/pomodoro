@@ -5,6 +5,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:vibration/vibration.dart';
 
 class Timer extends StatefulWidget {
@@ -54,19 +55,19 @@ class _TimerState extends State<Timer>
           })
           ..addStatusListener((status) {
             onComplete(status);
-            /*if (status == AnimationStatus.completed) {
+            if (status == AnimationStatus.completed) {
               if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
               if (shared.getDouble('soundValue') != 0) {
                 AudioPlayer().play(AssetSource('audio/finish.mp3'));
 
               }
-              if (shared.getBool('autoTimer') ?? false) {
+              /*if (shared.getBool('autoTimer') ?? false) {
                 controller.forward();
                 setState(() {
                   buttonController.forward();
                 });
-              }
-            }*/
+              }*/
+            }
 
           });
   }
@@ -114,7 +115,7 @@ class _TimerState extends State<Timer>
           shadowColor: Colors.grey.shade50,
           margin: const EdgeInsets.all(10),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
             child: Row(
               children: [
                 Container(
@@ -148,7 +149,7 @@ class _TimerState extends State<Timer>
                       height: 4,
                     ),
                     Text(
-                      '${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
+                      'Focus time: ${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
                       style: const TextStyle(
                         fontSize: 15,
                         color: Colors.white54,
