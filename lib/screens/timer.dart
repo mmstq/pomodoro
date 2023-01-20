@@ -1,8 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:duration_picker/duration_picker.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/model/task_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 
 class Timer extends StatefulWidget {
   const Timer({Key? key}) : super(key: key);
@@ -14,10 +17,7 @@ class Timer extends StatefulWidget {
 class _TimerState extends State<Timer>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late Animation<double> animation;
-
   Task task = defaultTask;
-
-
   Duration duration = const Duration(seconds: 20);
   late AnimationController controller;
   late AnimationController buttonController;
@@ -26,6 +26,7 @@ class _TimerState extends State<Timer>
   int index = 0;
   int round = 1;
   late int remaining = task.duration!;
+  late final SharedPreferences shared;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _TimerState extends State<Timer>
   }
 
   void initiation() {
+    shared = SharedPrefs.instance;
     buttonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     controller = AnimationController(
@@ -48,20 +50,33 @@ class _TimerState extends State<Timer>
               elap = controller.lastElapsedDuration != null
                   ? controller.lastElapsedDuration!.inMilliseconds
                   : elap;
-
             });
           })
           ..addStatusListener((status) {
             onComplete(status);
+            /*if (status == AnimationStatus.completed) {
+              if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
+              if (shared.getDouble('soundValue') != 0) {
+                AudioPlayer().play(AssetSource('audio/finish.mp3'));
+
+              }
+              if (shared.getBool('autoTimer') ?? false) {
+                controller.forward();
+                setState(() {
+                  buttonController.forward();
+                });
+              }
+            }*/
 
           });
   }
 
-  void onComplete(AnimationStatus status){
-    print(status);
+  void onComplete(AnimationStatus status) {
     if (AnimationStatus.completed == status) {
       if (task.taskDurations![index].category == 0) {
-        remaining -= ((elapsed+elap)/1000).round();
+        remaining -= ((elapsed + elap) / 1000).round();
+
+      }else{
         round += 1;
       }
       elap = 0;
@@ -71,13 +86,13 @@ class _TimerState extends State<Timer>
         task.taskDurations![index].isCompleted = true;
         buttonController.reverse();
 
-        if(index<task.taskDurations!.length-1) {
+        if (index < task.taskDurations!.length - 1) {
           index += 1;
         } else {
           remaining = task.duration!;
           task = defaultTask;
           round = 1;
-          index=0;
+          index = 0;
         }
         controller.duration =
             Duration(seconds: task.taskDurations![index].duration!);
@@ -133,7 +148,7 @@ class _TimerState extends State<Timer>
                       height: 4,
                     ),
                     Text(
-                      '${isRest?remaining : remaining-((elapsed+elap)~/1000)} mins',
+                      '${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
                       style: const TextStyle(
                         fontSize: 15,
                         color: Colors.white54,
@@ -171,16 +186,6 @@ class _TimerState extends State<Timer>
             ),
           ),
         ),
-        /*Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: Text(
-            isRest ? "Rest" : "Focus",
-            style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
-                color: isRest ? Colors.deepOrangeAccent : Colors.green),
-          ),
-        ),*/
         Container(
           alignment: Alignment.center,
           height: 300,
@@ -208,7 +213,7 @@ class _TimerState extends State<Timer>
                   await showDurationPicker(
                           context: context, initialTime: duration)
                       .then((value) {
-                    if (value !=null){
+                    if (value != null) {
                       setState(() {
                         controller.duration = value;
                       });
@@ -256,7 +261,7 @@ class _TimerState extends State<Timer>
                           title: const Text('Reset'),
                           content: const Text(
                               'This will reset the current progress and current round.'
-                                  '\nProgress made in this round will not be counted.\n\nContinue?'),
+                              '\nProgress made in this round will not be counted.\n\nContinue?'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -264,21 +269,22 @@ class _TimerState extends State<Timer>
                                 elapsed = 0;
                                 elap = 0;
                                 Navigator.pop(context);
-
                               },
-                              child: const Text('Yes',style: TextStyle(
-                                  fontSize: 18,
-                                  color:Colors.green,
-                                  fontWeight: FontWeight.w500)),
+                              child: const Text('Yes',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w500)),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: const Text('No',style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500)),
+                              child: const Text('No',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           ],
                         );
@@ -324,41 +330,42 @@ class _TimerState extends State<Timer>
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Switch'),
-                          content: const Text(
-                              'This will switch to next round.'
-                                  '\n\nDo you want to add the current round progress?'),
+                          content: const Text('This will switch to next round.'
+                              '\n\nDo you want to add the current round progress?'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: const Text('Dismiss',style: TextStyle(
-                                  fontSize: 18,
-                                  color:Colors.white,
-                                  fontWeight: FontWeight.w500)),
+                              child: const Text('Dismiss',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500)),
                             ),
-                            const SizedBox(width: 50,),
+                            const SizedBox(
+                              width: 50,
+                            ),
                             TextButton(
                               onPressed: () {
-
                                 onComplete(AnimationStatus.completed);
                                 Navigator.pop(context);
-
                               },
-                              child: const Text('Yes',style: TextStyle(
-                                  fontSize: 18,
-                                  color:Colors.green,
-                                  fontWeight: FontWeight.w500)),
+                              child: const Text('Yes',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w500)),
                             ),
                             TextButton(
                               onPressed: () {
-
                                 Navigator.pop(context);
                               },
-                              child: const Text('No',style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500)),
+                              child: const Text('No',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           ],
                         );

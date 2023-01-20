@@ -32,7 +32,7 @@ class _IntervalsState extends State<Intervals> {
     longRestTime = shared.getDouble('longRestTime') ?? 15;
     soundValue = shared.getDouble('soundValue') ?? 5;
     vibrate = shared.getBool('vibrate') ?? true;
-    autoTimer = shared.getBool('autoTimer') ?? true;
+    autoTimer = shared.getBool('autoTimer') ?? false;
   }
 
   Future<bool> save() async {
@@ -187,12 +187,13 @@ class _IntervalsState extends State<Intervals> {
               const SizedBox(
                 height: 32,
               ),
-              ElevatedButton(
-                style: ButtonStyle(elevation: ),
+              OutlinedButton(
                   onPressed: () async {
                     save().then((value) {
                       if (value) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: const Duration(milliseconds: 1500
+                          ),
                           content: Text(
                             'Settings saved successfully',
                             style: titleStyle.copyWith(fontSize: 16),
