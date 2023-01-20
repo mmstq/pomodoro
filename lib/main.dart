@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/homepage.dart';
-import 'package:pomodoro/screens/interval_setting.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize SharedPrefs instance.
   await SharedPrefs.init();
   runApp(const MyApp());
 }
@@ -28,7 +25,6 @@ class MyApp extends StatelessWidget {
             thumbColor: MaterialStateProperty.all(Colors.white),
             trackColor: MaterialStateProperty.resolveWith((states) =>
             states.contains(MaterialState.selected) ? Colors.indigo : null)),
-        primaryColor: Colors.indigo,
         primarySwatch: Colors.indigo,
         brightness: Brightness.dark,
       ),
@@ -37,7 +33,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Ubuntu',
         primarySwatch: Colors.indigo,
       ),
-      home: const Intervals(),
+      home: const HomePage(),
     );
   }
 }
