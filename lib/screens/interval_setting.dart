@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
 
 class Intervals extends StatefulWidget {
   const Intervals({Key? key}) : super(key: key);
