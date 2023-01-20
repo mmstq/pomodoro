@@ -54,19 +54,19 @@ class _TimerState extends State<Timer>
           })
           ..addStatusListener((status) {
             onComplete(status);
-            /*if (status == AnimationStatus.completed) {
+            if (status == AnimationStatus.completed) {
               if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
               if (shared.getDouble('soundValue') != 0) {
                 AudioPlayer().play(AssetSource('audio/finish.mp3'));
 
               }
-              if (shared.getBool('autoTimer') ?? false) {
+              /*if (shared.getBool('autoTimer') ?? false) {
                 controller.forward();
                 setState(() {
                   buttonController.forward();
                 });
-              }
-            }*/
+              }*/
+            }
 
           });
   }
@@ -148,7 +148,7 @@ class _TimerState extends State<Timer>
                       height: 4,
                     ),
                     Text(
-                      '${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
+                      'Focus time: ${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
                       style: const TextStyle(
                         fontSize: 15,
                         color: Colors.white54,
