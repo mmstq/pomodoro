@@ -1,6 +1,9 @@
 import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum Mode {light, dark, system}
+
+
 final shared = SharedPrefs.instance;
 
 final defaultTask = Task(title: "Default Session", rounds: 4,duration: 20, taskDurations: [

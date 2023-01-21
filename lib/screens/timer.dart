@@ -123,7 +123,7 @@ class _TimerState extends State<Timer>
                   decoration: const BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
                   child: const Icon(
                     Icons.access_time_filled,
                     size: 30,
@@ -148,7 +148,7 @@ class _TimerState extends State<Timer>
                       height: 4,
                     ),
                     Text(
-                      'Focus time: ${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
+                      'Total: ${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
                       style: const TextStyle(
                         fontSize: 15,
                         color: Colors.white54,
