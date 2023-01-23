@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro/data.dart';
 import 'package:pomodoro/screens/appearance.dart';
 import 'package:pomodoro/screens/behaviour.dart';
 import 'package:pomodoro/screens/interval_setting.dart';
@@ -14,11 +14,11 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(24),
-        padding: EdgeInsets.all(24),
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(20),
@@ -28,8 +28,7 @@ class _SettingState extends State<Setting> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Intervals()));
+                Navigator.push(context, createRoute(const Intervals()));
               },
               child: Row(
                 children: const [
@@ -50,7 +49,7 @@ class _SettingState extends State<Setting> {
               height: 20,
             ),
             Container(
-              color: Colors.white12,
+              color: Colors.white.withOpacity(0.05),
               height: 1,
               width: 300,
             ),
@@ -60,7 +59,7 @@ class _SettingState extends State<Setting> {
             InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Behaviour()));
+                    createRoute(const Behaviour()));
               },
               child: Row(
                 children: const [
@@ -81,7 +80,7 @@ class _SettingState extends State<Setting> {
               height: 20,
             ),
             Container(
-              color: Colors.white12,
+              color: Colors.white.withOpacity(0.05),
               height: 1,
               width: 300,
             ),
@@ -91,7 +90,7 @@ class _SettingState extends State<Setting> {
             InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Appearance()));
+                    createRoute(const Appearance()));
               },
               child: Row(
                 children: const [

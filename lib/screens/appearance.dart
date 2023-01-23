@@ -51,55 +51,76 @@ class _AppearanceState extends State<Appearance> {
         elevation: 0,
       ),
       body: Container(
-        margin: const EdgeInsets.all(24),
+        margin: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(children: [
-              ListTile(
-                  title: const Text('Mac'),
-                  trailing: Radio<Mode>(
-                    value: Mode.light,
-                    groupValue: _mode,
-                    onChanged: (Mode? value) {
-                      setState(() {
-                        _mode = value!;
-                      });
-                    },
-                  )
-              ),
-              ListTile(
-                  title: const Text('Windows'),
-                  trailing: Radio<Mode>(
-                    value: Mode.dark,
-                    groupValue: _mode,
-                    onChanged: (Mode? value) {
-                      setState(() {
-                        _mode = value!;
-                      });
-                    },
-                  )
-              ),
-              ListTile(
-                  title: const Text('Linux'),
-                  trailing: Radio<Mode>(
-                    value: Mode.system,
-                    groupValue: _mode,
-                    onChanged: (Mode? value) {
-                      setState(() {
-                        _mode = value!;
-                      });
-                    },
-                  )
-              ),
-            ],),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+                title: Text('Light',style: titleStyle,),
+                trailing: Radio<Mode>(
+                  value: Mode.light,
+                  groupValue: _mode,
+                  activeColor: Colors.indigo.shade500,
+                  onChanged: (Mode? value) {
+                    setState(() {
+                      _mode = value!;
+                      ThemeData.light();
+                    });
+                  },
+                )
+            ),
+            ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text('Dark', style: titleStyle,),
+                trailing: Radio<Mode>(
+                  value: Mode.dark,
+                  activeColor: Colors.indigo.shade500,
+                  groupValue: _mode,
+                  onChanged: (Mode? value) {
+                    setState(() {
+                      _mode = value!;
+                    });
+                  },
+                )
+            ),
+            ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text('System',style:titleStyle),
+                trailing: Radio<Mode>(
+                  value: Mode.system,
+                  activeColor: Colors.indigo.shade500,
+                  groupValue: _mode,
+                  onChanged: (Mode? value) {
+                    setState(() {
+                      _mode = value!;
+                    });
+                  },
+                )
+            ),
             const SizedBox(
               height: 8,
             ),
+            Row(
+              children: [
+                Text('Pure Black ', style: titleStyle),
+                const Spacer(),
+                Switch(
+                  value: autoTimer,
+                  onChanged: (value) {
+                    setState(() {
+                      autoTimer = value;
+                    });
+                  },
+                ),
+              ],
+            ),
             Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: Text('0 = No sound at all', style: descriptionStyle),
+              padding: const EdgeInsets.only(left: 10,right: 10),
+              child: Text(
+                  'Long break after every 4 focus rounds. Suggested value is 15 minutes',
+                  style: descriptionStyle),
             ),
             const Spacer(),
             OutlinedButton(
