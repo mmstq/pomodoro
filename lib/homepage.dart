@@ -15,14 +15,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final PageController pageController = PageController();
   int index = 0;
-  final List<String> title = ['Focus', 'Tasks', 'Analytics', 'Setting'];
+  final List<String> title = ['Focus', /*'Tasks', 'Analytics',*/ 'Settings'];
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         actions: [
           PopupMenuButton<String>(
+
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
                       child: Text('Contact'),
@@ -33,25 +37,25 @@ class _HomePageState extends State<HomePage> {
                   ])
         ],
         elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: theme.colorScheme.primaryContainer,
         title: Text(
           title[index],
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          style:theme.appBarTheme.titleTextStyle,
         ),
       ),
       body: PageView(
+
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: const [
           Timer(),
-          TaskPage(),
-          Analytics(),
+          /*TaskPage(),
+          Analytics(),*/
           Setting(),
         ],
       ),
       bottomNavigationBar: SlidingClippedNavBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: theme.colorScheme.primaryContainer,
         onButtonPressed: (i) {
           setState(() {
             index = i;
@@ -61,22 +65,22 @@ class _HomePageState extends State<HomePage> {
               curve: Curves.easeOutQuad);
         },
         iconSize: 25,
-        inactiveColor: Colors.white38,
-        activeColor: Colors.white,
+        inactiveColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+        activeColor: theme.bottomNavigationBarTheme.selectedItemColor!,
         selectedIndex: index,
         barItems: [
           BarItem(
             icon: Icons.timelapse_rounded,
             title: 'Timer',
           ),
-          BarItem(
+         /* BarItem(
             icon: Icons.task_alt,
             title: 'Tasks',
           ),
           BarItem(
             icon: Icons.pie_chart,
             title: 'Analytics',
-          ),
+          ),*/
           BarItem(
             icon: Icons.settings,
             title: 'Settings',

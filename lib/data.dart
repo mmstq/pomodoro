@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum Mode {light, dark, system}
-
 
 final shared = SharedPrefs.instance;
 
@@ -20,7 +18,7 @@ Route createRoute(Widget newPage) {
 }
 
 
-final defaultTask = Task(title: "Default Session", rounds: 4,duration: 20, taskDurations: [
+final defaultTask = Task(title: "Default Session", rounds: 4,duration:  ((shared.getDouble('focusTime')??25)*4).toInt(), taskDurations: [
   TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
   TaskDurations(duration: get('restTime',2),   isCompleted: false, category: 1),
   TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),

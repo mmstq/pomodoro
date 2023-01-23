@@ -40,9 +40,10 @@ dependencies:
   duration_picker:
   timelines: ^0.1.0
   vibration:
+  provider:
   audioplayers: ^2.0.0
   shared_preferences:
-  sqflite:
+#  sqflite:
   sliding_clipped_nav_bar:
 
 dev_dependencies:

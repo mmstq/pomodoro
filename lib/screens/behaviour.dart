@@ -14,15 +14,9 @@ class _BehaviourState extends State<Behaviour> {
   late bool autoTimer;
   late double soundValue;
   late final SharedPreferences shared;
-  late final TextStyle titleStyle;
-  late final TextStyle descriptionStyle;
 
   void initialise() {
     shared = SharedPrefs.instance;
-    titleStyle = const TextStyle(
-        fontSize: 18, color: Colors.white70, fontWeight: FontWeight.w400);
-    descriptionStyle = titleStyle.copyWith(
-        fontSize: 15, color: Colors.white54, fontWeight: FontWeight.w300);
     soundValue = shared.getDouble('soundValue') ?? 5;
     vibrate = shared.getBool('vibrate') ?? true;
     autoTimer = shared.getBool('autoTimer') ?? false;
@@ -32,6 +26,7 @@ class _BehaviourState extends State<Behaviour> {
     var saved = false;
     saved = await shared.setBool('vibrate', vibrate);
     saved = await shared.setBool('autoTimer', autoTimer);
+    saved = await shared.setDouble('soundValue', soundValue);
     return saved;
   }
 
@@ -43,10 +38,11 @@ class _BehaviourState extends State<Behaviour> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Behaviour'),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,
       ),
       body: Container(
@@ -57,7 +53,8 @@ class _BehaviourState extends State<Behaviour> {
           children: [
             Row(
               children: [
-                Text('Auto Start Timer', style: titleStyle),
+                Text('Auto Start Timer',
+                    style: Theme.of(context).textTheme.titleSmall),
                 const Spacer(),
                 Switch(
                   value: autoTimer,
@@ -74,7 +71,8 @@ class _BehaviourState extends State<Behaviour> {
             ),
             Row(
               children: [
-                Text('Enable Vibration', style: titleStyle),
+                Text('Enable Vibration',
+                    style: Theme.of(context).textTheme.titleSmall),
                 const Spacer(),
                 Switch(
                   value: vibrate,
@@ -91,9 +89,11 @@ class _BehaviourState extends State<Behaviour> {
             ),
             Row(
               children: [
-                Text('Sound Volume Percentage', style: titleStyle),
+                Text('Sound Volume Percentage',
+                    style: Theme.of(context).textTheme.titleSmall),
                 const Spacer(),
-                Text('• ${soundValue.toInt()}      ', style: titleStyle),
+                Text('• ${soundValue.toInt()}      ',
+                    style: Theme.of(context).textTheme.titleSmall),
               ],
             ),
             Slider(
@@ -110,10 +110,11 @@ class _BehaviourState extends State<Behaviour> {
                 }),
             Padding(
               padding: const EdgeInsets.only(left: 30),
-              child: Text('0 = No sound at all', style: descriptionStyle),
+              child: Text('0 = No sound at all',
+                  style: Theme.of(context).textTheme.displaySmall),
             ),
             const Spacer(),
-            OutlinedButton(
+            ElevatedButton(
                 onPressed: () async {
                   save().then((value) {
                     if (value) {
@@ -121,7 +122,10 @@ class _BehaviourState extends State<Behaviour> {
                         duration: const Duration(milliseconds: 1500),
                         content: Text(
                           'Settings saved successfully',
-                          style: titleStyle.copyWith(fontSize: 16),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(fontSize: 16, color: Colors.white),
                         ),
                         backgroundColor: Colors.indigo,
                       ));

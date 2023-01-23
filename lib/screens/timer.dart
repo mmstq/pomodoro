@@ -57,7 +57,9 @@ class _TimerState extends State<Timer>
             if (status == AnimationStatus.completed) {
               if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
               if (shared.getDouble('soundValue') != 0) {
-                AudioPlayer().play(AssetSource('audio/finish.mp3'));
+                var audio = AudioPlayer();
+                audio.setVolume((shared.getDouble('soundValue')??0.5)/10);
+                audio.play(AssetSource('audio/finish.mp3'));
 
               }
               /*if (shared.getBool('autoTimer') ?? false) {
@@ -105,13 +107,14 @@ class _TimerState extends State<Timer>
     super.build(context);
     final size = MediaQuery.of(context).size;
     final isRest = task.taskDurations![index].category != 0;
-
+    final theme = Theme.of(context);
     return Column(
       children: [
         // Text(index.toString()),
         Card(
-          elevation: 0.2,
-          shadowColor: Colors.grey.shade50,
+          color: theme.colorScheme.primaryContainer,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           margin: const EdgeInsets.all(10),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -138,22 +141,14 @@ class _TimerState extends State<Timer>
                   children: [
                     Text(
                       task.title!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFFDEDEDE),
-                      ),
+                      style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
                       'Total: ${isRest ? remaining : remaining - ((elapsed + elap) ~/ 1000)} mins',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.white54,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: theme.textTheme.displaySmall!.copyWith(fontSize: 16, fontWeight: FontWeight.w400)
                     ),
                   ],
                 ),
@@ -164,21 +159,14 @@ class _TimerState extends State<Timer>
                   children: [
                     Text(
                       '$round / ${task.rounds}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFDEDEDE),
-                      ),
+                      style: theme.textTheme.titleSmall
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
                       "${task.taskDurations![index].duration} mins",
-                      style: const TextStyle(
-                          fontSize: 15,
-                          color: Colors.white54,
-                          fontWeight: FontWeight.w500),
+                      style: theme.textTheme.displaySmall!.copyWith(fontSize: 16, fontWeight: FontWeight.w400)
                     ),
                   ],
                 ),
@@ -224,10 +212,7 @@ class _TimerState extends State<Timer>
                   formattedTime(
                       timeInMilli:
                           controller.duration!.inMilliseconds - elapsed - elap),
-                  style: const TextStyle(
-                      color: Color(0xFFDEDEDE),
-                      fontSize: 35,
-                      fontWeight: FontWeight.w600),
+                  style: theme.textTheme.titleLarge,
                 ),
               ),
             ],
@@ -238,10 +223,7 @@ class _TimerState extends State<Timer>
           child: Text(
               '${isRest ? 'Take a break for' : 'Stay focused for'}'
               ' ${task.taskDurations![index].duration} minutes',
-              style: const TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFFDEDEDE),
-                  fontWeight: FontWeight.w500)),
+              style: theme.textTheme.displaySmall!.copyWith(fontWeight: FontWeight.w400, fontSize: 18)),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
