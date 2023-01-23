@@ -50,7 +50,7 @@ class _BehaviourState extends State<Behaviour> {
         elevation: 0,
       ),
       body: Container(
-        margin: const EdgeInsets.all(24),
+        margin: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

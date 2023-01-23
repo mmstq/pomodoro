@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -5,6 +6,19 @@ enum Mode {light, dark, system}
 
 
 final shared = SharedPrefs.instance;
+
+Route createRoute(Widget newPage) {
+  return PageRouteBuilder(
+      pageBuilder: (context, animation, secondAnimation) => newPage,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.1, 0.0);
+        const end = Offset.zero;
+        const curve  = Curves.ease;
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return SlideTransition(position: animation.drive(tween),child: child,);
+      });
+}
+
 
 final defaultTask = Task(title: "Default Session", rounds: 4,duration: 20, taskDurations: [
   TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
