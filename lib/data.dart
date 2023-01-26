@@ -18,18 +18,6 @@ Route createRoute(Widget newPage) {
 }
 
 
-final defaultTask = Task(title: "Default Session", rounds: 4,duration:  ((shared.getDouble('focusTime')??25)*4).toInt(), taskDurations: [
-  TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
-  TaskDurations(duration: get('restTime',2),   isCompleted: false, category: 1),
-  TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
-  TaskDurations(duration: get('restTime',2),  isCompleted: false, category: 1),
-  TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
-  TaskDurations(duration: get('restTime',2),   isCompleted: false, category: 1),
-  TaskDurations(duration: get('focusTime',5), isCompleted: false, category: 0),
-  TaskDurations(duration: get('longRestTime',3), isCompleted: false, category: 2),
-]);
-
-
 int get(String key, int defaultValue){
   /*if (shared.containsKey(key)) {
     return shared.getDouble(key)!.toInt();

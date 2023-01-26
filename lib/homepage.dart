@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro/screens/analytics.dart';
+import 'package:pomodoro/data.dart';
+import 'package:pomodoro/screens/about.dart';
+import 'package:pomodoro/screens/privacy_policy.dart';
 import 'package:pomodoro/screens/settings.dart';
-import 'package:pomodoro/screens/task_page.dart';
 import 'package:pomodoro/screens/timer.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
@@ -26,13 +27,28 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           PopupMenuButton<String>(
-
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      child: Text('Contact'),
+                PopupMenuItem<String>(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(context, createRoute(const About()));
+                    },
+                    child: Text(
+                      'About',
+                      style: theme.textTheme.titleSmall,
                     ),
-                    const PopupMenuItem<String>(
-                      child: Text('Contact'),
+                  ),
+                ),
+                    PopupMenuItem<String>(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(context, createRoute(const Privacy()));
+                        },
+                        child: Text(
+                          'Privacy Policy',
+                          style: theme.textTheme.titleSmall,
+                        ),
+                      ),
                     ),
                   ])
         ],
@@ -40,11 +56,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: theme.colorScheme.primaryContainer,
         title: Text(
           title[index],
-          style:theme.appBarTheme.titleTextStyle,
+          style: theme.appBarTheme.titleTextStyle,
         ),
       ),
       body: PageView(
-
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: const [
@@ -73,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icons.timelapse_rounded,
             title: 'Timer',
           ),
-         /* BarItem(
+          /* BarItem(
             icon: Icons.task_alt,
             title: 'Tasks',
           ),

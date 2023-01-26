@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/homepage.dart';
 import 'package:pomodoro/providers/theme_mode_notifier.dart';
+import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.init();
-  runApp(ChangeNotifierProvider(
-    create: (_) => ThemeNotifier(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      ChangeNotifierProvider(create: (_) => TimerProvider())
+    ],
     child: const MyApp(),
   ));
 }
@@ -50,7 +54,7 @@ class MyApp extends StatelessWidget {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.indigo  ,
+              backgroundColor: Colors.indigo,
               elevation: 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)))),
@@ -89,7 +93,6 @@ class MyApp extends StatelessWidget {
           trackColor: MaterialStateProperty.resolveWith((states) =>
               states.contains(MaterialState.selected) ? Colors.indigo : null)),
       primarySwatch: Colors.indigo,
-
     );
   }
 
@@ -131,10 +134,10 @@ class MyApp extends StatelessWidget {
               fontSize: 20,
               color: Colors.white70,
               fontWeight: FontWeight.w300),
-        titleLarge: TextStyle(
-            color: Colors.white70,
-            fontSize: 40,
-            fontWeight: FontWeight.w900)),
+          titleLarge: TextStyle(
+              color: Colors.white70,
+              fontSize: 40,
+              fontWeight: FontWeight.w900)),
       appBarTheme: AppBarTheme.of(context).copyWith(
           titleTextStyle: const TextStyle(
               fontSize: 20,
