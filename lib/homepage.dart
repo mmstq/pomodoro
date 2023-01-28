@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/screens/about.dart';
 import 'package:pomodoro/screens/privacy_policy.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-
+    FlutterNativeSplash.remove();
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(

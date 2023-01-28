@@ -44,6 +44,7 @@ dependencies:
   audioplayers: ^2.0.0
   shared_preferences:
 #  sqflite:
+  flutter_native_splash:
   sliding_clipped_nav_bar:
 
 dev_dependencies:

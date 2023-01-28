@@ -6,13 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 class TimerProvider extends ChangeNotifier {
+
+  // Variables
   late Task _task;
-  int elapsed = 0;  // the duration happened during whole session
-  int elap = 0;   // the duration happened during single round
+  int elapsed = 0; // the duration happened during whole session
+  int elap = 0; // the duration happened during single round
   int index = 0;
   int round = 1;
-  late int remaining = task.duration!;
+
+  late int remaining;
   late final SharedPreferences _shared;
+  // Getters
+  SharedPreferences get shared => _shared;
+  Task get task => _task;
+  bool get isRest => task.taskDurations![index].category != 0;
 
   TimerProvider() {
     initiation();
@@ -23,27 +30,12 @@ class TimerProvider extends ChangeNotifier {
     initialiseTask();
   }
 
-  void refreshState()=>notifyListeners();
-
-
-  void recordDurationLeft(Duration? duration){
-    elap = duration != null
-        ? duration.inMilliseconds
-        : elap;
-    notifyListeners();
-  }
-
-  SharedPreferences get shared => _shared;
-  Task get task => _task;
-
-  bool get isRest => task.taskDurations![index].category != 0;
-
   void initialiseTask() {
     _task = Task();
     _task = Task(
         title: "Default Session",
         rounds: 4,
-        duration: ((shared.getDouble('focusTime') ?? 25) * 4).toInt(),
+        duration: 20,
         taskDurations: [
           TaskDurations(
               duration: get('focusTime', 5), isCompleted: false, category: 0),
@@ -64,13 +56,15 @@ class TimerProvider extends ChangeNotifier {
               isCompleted: false,
               category: 2),
         ]);
+
+    calculateRemaining();
   }
 
   void checkVibrationAndMusic() {
     if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
     if (shared.getDouble('soundValue') != 0) {
       var audio = AudioPlayer();
-      audio.setVolume((shared.getDouble('soundValue') ?? 0.5) / 10);
+      audio.setVolume((shared.getDouble('soundValue') ?? 5) / 10);
       audio.play(AssetSource('audio/finish.mp3'));
     }
 
@@ -82,11 +76,27 @@ class TimerProvider extends ChangeNotifier {
               }*/
   }
 
-  double calculateTime() {
-    return 0;
+
+  void refreshState() => notifyListeners();
+
+
+  void calculateRemaining() {
+    remaining = 0;
+    for (var element in _task.taskDurations!) {
+      if (element.isCompleted == false && element.category ==0) {
+        remaining += element.duration!;
+      }
+    }
   }
 
-  void resetTask() {}
+
+  void resetTask() {
+    elap = 0;
+    elapsed=0;
+    round = 1;
+    index = 0;
+    initialiseTask();
+  }
 
   int get(String key, int defaultValue) {
     /*if (shared.containsKey(key)) {
@@ -103,5 +113,4 @@ class TimerProvider extends ChangeNotifier {
     String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
     return "$minute : $second";
   }
-
 }

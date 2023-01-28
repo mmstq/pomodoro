@@ -1,12 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:duration_picker/duration_picker.dart';
-import 'package:pomodoro/data.dart';
-import 'package:pomodoro/model/task_model.dart';
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 class Timer extends StatefulWidget {
   const Timer({Key? key}) : super(key: key);
@@ -29,22 +24,28 @@ class _TimerState extends State<Timer>
   }
 
   void initiation() {
-
     buttonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     controller = AnimationController(
-        duration: Duration(seconds: _provider.task.taskDurations![_provider.index].duration!),
+        duration: Duration(
+            seconds: _provider.task.taskDurations![_provider.index].duration!),
         vsync: this);
     final curvedAnimation =
     CurvedAnimation(parent: controller, curve: Curves.linear);
     animation =
     Tween<double>(begin: math.pi * 2, end: 0.0).animate(curvedAnimation)
-      ..addListener(() =>
-          _provider.recordDurationLeft(controller.lastElapsedDuration!)
+      ..addListener(() {
+        _provider.elap =
+        controller.lastElapsedDuration != null ? controller.lastElapsedDuration!
+            .inMilliseconds : _provider.elap;
+        _provider.refreshState();
+      }
+
       )
       ..addStatusListener((status) {
         onComplete(status);
         if (status == AnimationStatus.completed) {
+          print(_provider.remaining);
           _provider.checkVibrationAndMusic();
         }
       });
@@ -53,28 +54,34 @@ class _TimerState extends State<Timer>
   void onComplete(AnimationStatus status) {
     if (AnimationStatus.completed == status) {
       if (_provider.task.taskDurations![_provider.index].category == 0) {
-        _provider.remaining -= ((_provider.elapsed + _provider.elap) / 1000).round();
+        _provider.remaining -=
+            ((_provider.elapsed + _provider.elap) / 1000).round();
+
       } else {
         _provider.round += 1;
       }
       _provider.elap = 0;
-      controller.reset();
+      _provider.elapsed=0;
 
-      _provider.refreshState();
       _provider.task.taskDurations![_provider.index].isCompleted = true;
+
+      controller.reset();
       buttonController.reverse();
 
       if (_provider.index < _provider.task.taskDurations!.length - 1) {
         _provider.index += 1;
       } else {
-        _provider.remaining = _provider.task.duration!;
-        // _provider.task = _provider.task;
+
+        _provider.calculateRemaining();
         _provider.round = 1;
         _provider.index = 0;
+        _provider.resetTask();
       }
       controller.duration =
-          Duration(seconds: _provider.task.taskDurations![_provider.index].duration!);
+          Duration(seconds: _provider.task.taskDurations![_provider.index]
+              .duration!);
     }
+    _provider.refreshState();
   }
 
   @override
@@ -87,6 +94,8 @@ class _TimerState extends State<Timer>
     return Consumer<TimerProvider>(
       builder: (builder, model, child) {
         _provider = model;
+        _provider.calculateRemaining();
+
         return Column(
           children: [
             // Text(model.index.toString()),
@@ -231,8 +240,7 @@ class _TimerState extends State<Timer>
                                 TextButton(
                                   onPressed: () {
                                     controller.reset();
-                                    model.elapsed = 0;
-                                    model.elap = 0;
+                                    model.resetTask();
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Yes',
@@ -270,16 +278,17 @@ class _TimerState extends State<Timer>
                           model.elapsed += model.elap;
                           model.elap = 0;
                           controller.stop(canceled: false);
-                          setState(() {
-                            buttonController.reverse();
-                          });
+                          buttonController.reverse();
+
                         } else {
                           controller.forward();
-                          setState(() {
-                            buttonController.forward();
-                          });
-                          // if(model.elapsed!=0) wasPaused=true;
+                          buttonController.forward();
                         }
+                        model.refreshState();
+                        print(controller.duration!.inMilliseconds -
+                            model.elapsed -
+                            model.elap);
+
                       }),
                 ),
                 CircleAvatar(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:pomodoro/data.dart';
 import 'package:pomodoro/homepage.dart';
 import 'package:pomodoro/providers/theme_mode_notifier.dart';
@@ -6,7 +7,8 @@ import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SharedPrefs.init();
   runApp(MultiProvider(
     providers: [

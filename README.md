@@ -8,7 +8,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 The application is on Play Store:
 
-Download Now: ![alt text](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png )
+![alt text](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png )
 
 
 
