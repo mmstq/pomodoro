@@ -1,70 +1,75 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:pomodoro/data.dart';
-import 'package:pomodoro/model/task_model.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
+import 'package:wakelock/wakelock.dart';
 
 class TimerProvider extends ChangeNotifier {
-
   // Variables
-  late Task _task;
   int elapsed = 0; // the duration happened during whole session
   int elap = 0; // the duration happened during single round
   int index = 0;
   int round = 1;
+  bool keepAwake = false;
 
-  late int remaining;
+  int totalFocused=0;
   late final SharedPreferences _shared;
+
   // Getters
   SharedPreferences get shared => _shared;
-  Task get task => _task;
-  bool get isRest => task.taskDurations![index].category != 0;
+
+
+  bool get isRest  {
+    switch (index) {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+        return true;
+      default:
+        return false;
+  }
+}
 
   TimerProvider() {
     initiation();
   }
 
+
   void initiation() {
     _shared = SharedPrefs.instance;
-    initialiseTask();
+    keepAwake = _shared.getBool('keepAwake')??false;
   }
 
-  void initialiseTask() {
-    _task = Task();
-    _task = Task(
-        title: "Default Session",
-        rounds: 4,
-        duration: 20,
-        taskDurations: [
-          TaskDurations(
-              duration: get('focusTime', 5), isCompleted: false, category: 0),
-          TaskDurations(
-              duration: get('restTime', 2), isCompleted: false, category: 1),
-          TaskDurations(
-              duration: get('focusTime', 5), isCompleted: false, category: 0),
-          TaskDurations(
-              duration: get('restTime', 2), isCompleted: false, category: 1),
-          TaskDurations(
-              duration: get('focusTime', 5), isCompleted: false, category: 0),
-          TaskDurations(
-              duration: get('restTime', 2), isCompleted: false, category: 1),
-          TaskDurations(
-              duration: get('focusTime', 5), isCompleted: false, category: 0),
-          TaskDurations(
-              duration: get('longRestTime', 3),
-              isCompleted: false,
-              category: 2),
-        ]);
+  int getNextRound() {
 
-    calculateRemaining();
+    var a = 25.0;
+    switch (index) {
+
+      case 7:
+        a = shared.getDouble('longRestTime') ?? 15.0;
+        break;
+
+      case 1:
+      case 3:
+      case 5:
+        a = shared.getDouble('restTime') ?? 5.0;
+        break;
+
+      default:
+        a = shared.getDouble('focusTime') ?? 25;
+        break;
+    }
+    return a.toInt();
   }
+
 
   void checkVibrationAndMusic() {
     if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
     if (shared.getDouble('soundValue') != 0) {
       var audio = AudioPlayer();
-      audio.setVolume((shared.getDouble('soundValue') ?? 5) / 10);
+      audio.setVolume(shared.getDouble('soundValue') ?? 5);
       audio.play(AssetSource('audio/finish.mp3'));
     }
 
@@ -76,26 +81,23 @@ class TimerProvider extends ChangeNotifier {
               }*/
   }
 
+  @override
+  void dispose() {
+    Wakelock.disable();
+    super.dispose();
+  }
+
+
 
   void refreshState() => notifyListeners();
 
 
-  void calculateRemaining() {
-    remaining = 0;
-    for (var element in _task.taskDurations!) {
-      if (element.isCompleted == false && element.category ==0) {
-        remaining += element.duration!;
-      }
-    }
-  }
-
-
   void resetTask() {
     elap = 0;
-    elapsed=0;
+    elapsed = 0;
+    totalFocused = 0;
     round = 1;
     index = 0;
-    initialiseTask();
   }
 
   int get(String key, int defaultValue) {

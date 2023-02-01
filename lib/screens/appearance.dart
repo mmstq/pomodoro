@@ -10,13 +10,14 @@ class Appearance extends StatefulWidget {
 }
 
 class _AppearanceState extends State<Appearance> {
-
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: theme.appBarTheme.titleTextStyle!.color,
+        ),
         title: const Text('Appearance'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,
@@ -24,14 +25,24 @@ class _AppearanceState extends State<Appearance> {
       body: Container(
         margin: const EdgeInsets.all(32),
         child: Consumer<ThemeNotifier>(
-          builder: (context, model, child){
+          builder: (context, model, child) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'Choose Theme',
+                    style: theme.textTheme.titleMedium!.copyWith(fontSize: 22,fontWeight: FontWeight.w400),
+                  ),
+                ),
                 ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text('Light',style: Theme.of(context).textTheme.titleSmall,),
+                    contentPadding: const EdgeInsets.only(left: 10),
+                    title: Text(
+                      'Light',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     trailing: Radio<int>(
                       value: 0,
                       groupValue: model.themeMode,
@@ -39,11 +50,13 @@ class _AppearanceState extends State<Appearance> {
                       onChanged: (int? value) {
                         model.changeTheme(value!);
                       },
-                    )
-                ),
+                    )),
                 ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text('Dark', style: Theme.of(context).textTheme.titleSmall,),
+                    contentPadding: const EdgeInsets.only(left: 10),
+                    title: Text(
+                      'Dark',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     trailing: Radio<int>(
                       value: 1,
                       activeColor: Colors.indigo.shade500,
@@ -51,11 +64,11 @@ class _AppearanceState extends State<Appearance> {
                       onChanged: (int? value) {
                         model.changeTheme(value!);
                       },
-                    )
-                ),
+                    )),
                 ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text('System',style:Theme.of(context).textTheme.titleSmall),
+                    contentPadding: const EdgeInsets.only(left: 10),
+                    title: Text('System',
+                        style: Theme.of(context).textTheme.titleSmall),
                     trailing: Radio<int>(
                       value: 2,
                       activeColor: Colors.indigo.shade500,
@@ -63,16 +76,17 @@ class _AppearanceState extends State<Appearance> {
                       onChanged: (int? value) {
                         model.changeTheme(value!);
                       },
-                    )
-                ),
+                    )),
                 const SizedBox(
                   height: 8,
                 ),
-                Row(
+                /*Row(
                   children: [
-                    Text('Pure Black ', style: Theme.of(context).textTheme.titleSmall),
+                    Text('Pure Black ',
+                        style: Theme.of(context).textTheme.titleSmall),
                     const Spacer(),
                     Switch(
+
                       value: model.blackMode,
                       onChanged: (value) {
                         model.changeBlackMode(value);
@@ -81,13 +95,13 @@ class _AppearanceState extends State<Appearance> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10,right: 10),
+                  padding: const EdgeInsets.only(left: 4, right: 60),
                   child: Text(
-                      'This is useful if you device has AMOLED Display.'
-                          ' Pure black color will be used throughout app to save power',
+                      'This is useful if you device has OLED Display.'
+                      ' Pure black color will be used throughout app to save power',
                       style: Theme.of(context).textTheme.displaySmall),
                 ),
-                const Spacer(),
+                const Spacer(),*/
               ],
             );
           },

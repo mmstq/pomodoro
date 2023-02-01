@@ -43,9 +43,13 @@ dependencies:
   provider:
   audioplayers: ^2.0.0
   shared_preferences:
+  wakelock:
+#  awesome_notifications:
+#  notification_permissions: ^0.6.1
 #  sqflite:
   flutter_native_splash:
   sliding_clipped_nav_bar:
+  flex_color_scheme: ^6.1.2
 
 dev_dependencies:
   flutter_test:

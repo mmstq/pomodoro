@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:pomodoro/data.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/screens/about.dart';
 import 'package:pomodoro/screens/privacy_policy.dart';
 import 'package:pomodoro/screens/settings.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro/data.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Intervals extends StatefulWidget {
@@ -42,6 +42,7 @@ class _IntervalsState extends State<Intervals> {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(color: theme.appBarTheme.titleTextStyle!.color,),
         title: const Text('Intervals'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,

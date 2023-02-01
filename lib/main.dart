@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:pomodoro/data.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/homepage.dart';
 import 'package:pomodoro/providers/theme_mode_notifier.dart';
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await SharedPrefs.init();
+  await initialization();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ThemeNotifier()),
@@ -17,6 +15,36 @@ void main() async {
     ],
     child: const MyApp(),
   ));
+}
+
+Future<void> initialization() async{
+
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await SharedPrefs.init();
+  /*AwesomeNotifications().initialize(
+    // set the icon to null if you want to use the default app icon
+      null,
+      [
+        NotificationChannel(
+            channelGroupKey: 'basic_channel_group',
+            channelKey: 'basic_channel',
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic tests',
+            defaultColor: const Color(0xFF9D50DD),
+            onlyAlertOnce: true,
+            ledColor: Colors.white)
+      ],
+      // Channel groups are only visual and are not required
+      channelGroups: [
+        NotificationChannelGroup(
+            channelGroupKey: 'basic_channel_group',
+            channelGroupName: 'Basic group')
+      ],
+      debug: true
+  );*/
+
+
 }
 
 //maven baloo2 rajdhani sairaSemiCondensed itim coda
@@ -50,9 +78,12 @@ class MyApp extends StatelessWidget {
 
   ThemeData getLightTheme(BuildContext context) {
     return ThemeData(
+      useMaterial3: true,
       scaffoldBackgroundColor: Colors.grey.shade100,
       colorScheme: const ColorScheme.light(
         primaryContainer: Colors.white,
+        tertiary: Colors.black87
+
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -78,7 +109,7 @@ class MyApp extends StatelessWidget {
           displaySmall: TextStyle(
               fontSize: 15, color: Colors.black54, fontWeight: FontWeight.w300),
           titleMedium: TextStyle(
-              fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
+              fontSize: 20, color: Colors.black87, fontWeight: FontWeight.w300),
           titleLarge: TextStyle(
               color: Colors.black38,
               fontSize: 40,
@@ -91,16 +122,28 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Sofia'),
           iconTheme: const IconThemeData(color: Colors.black)),
       switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.white),
-          trackColor: MaterialStateProperty.resolveWith((states) =>
-              states.contains(MaterialState.selected) ? Colors.indigo : null)),
+        thumbColor: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? Colors.white
+                : Colors.black),
+        trackColor: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? Colors.indigo
+                : Colors.grey.withOpacity(0.4)),
+        thumbIcon: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? const Icon(Icons.check, color: Colors.indigo)
+                : const Icon(Icons.close)),
+      ),
       primarySwatch: Colors.indigo,
     );
   }
 
   ThemeData getDarkTheme(BuildContext context) {
     return ThemeData(
+      useMaterial3: true,
       scaffoldBackgroundColor: const Color(0xFF1C1F23),
+      cardColor: const Color(0xFF1C1F23),
       sliderTheme: SliderThemeData(
           activeTickMarkColor: Colors.white,
           activeTrackColor: Colors.indigo,
@@ -108,6 +151,7 @@ class MyApp extends StatelessWidget {
           inactiveTickMarkColor: Colors.white38),
       colorScheme: const ColorScheme.light(
         primaryContainer: Color(0xFF16181A),
+        tertiary: Colors.grey,
         brightness: Brightness.dark,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -119,7 +163,7 @@ class MyApp extends StatelessWidget {
       fontFamily: "Sofia",
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           unselectedItemColor: Colors.white38,
-          selectedItemColor: Colors.white70),
+          selectedItemColor: Colors.white),
       textTheme: const TextTheme(
           titleSmall: TextStyle(
               //title in sub setting
@@ -129,7 +173,7 @@ class MyApp extends StatelessWidget {
           displaySmall: TextStyle(
               // note text in sub setting
               fontSize: 15,
-              color: Colors.white54,
+              color: Colors.white60,
               fontWeight: FontWeight.w300),
           titleMedium: TextStyle(
               // title in settings
@@ -147,10 +191,22 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w500,
               fontFamily: 'Sofia'),
           iconTheme: const IconThemeData(color: Colors.white)),
+      radioTheme:
+          RadioThemeData(fillColor: MaterialStateProperty.all(Colors.white70)),
       switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.white),
-          trackColor: MaterialStateProperty.resolveWith((states) =>
-              states.contains(MaterialState.selected) ? Colors.indigo : null)),
+        thumbColor: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? Colors.white
+                : Colors.black),
+        trackColor: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? Colors.indigo
+                : Colors.indigo.withOpacity(0.4)),
+        thumbIcon: MaterialStateProperty.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? const Icon(Icons.check, color: Colors.indigo)
+                : const Icon(Icons.close)),
+      ),
       primarySwatch: Colors.indigo,
       brightness: Brightness.dark,
     );

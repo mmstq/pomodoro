@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro/data.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/screens/appearance.dart';
 import 'package:pomodoro/screens/behaviour.dart';
 import 'package:pomodoro/screens/interval_setting.dart';
@@ -38,9 +38,10 @@ class _SettingState extends State<Setting> {
                   Text("Intervals",
                       style: theme.textTheme.titleMedium),
                   const Spacer(),
-                  const Icon(
+                  Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
+                    color: theme.textTheme.displaySmall!.color,
                   ),
                 ],
               ),
@@ -66,9 +67,10 @@ class _SettingState extends State<Setting> {
                   Text("Behaviour",
                       style: theme.textTheme.titleMedium),
                   const Spacer(),
-                  const Icon(
+                  Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
+                    color: theme.textTheme.displaySmall!.color,
                   ),
                 ],
               ),
@@ -94,9 +96,10 @@ class _SettingState extends State<Setting> {
                   Text("Appearance",
                       style: theme.textTheme.titleMedium),
                   const Spacer(),
-                  const Icon(
+                  Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
+                    color: theme.textTheme.displaySmall!.color,
                   ),
                 ],
               ),

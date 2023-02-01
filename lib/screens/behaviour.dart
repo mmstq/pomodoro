@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro/data.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Behaviour extends StatefulWidget {
@@ -11,6 +11,7 @@ class Behaviour extends StatefulWidget {
 
 class _BehaviourState extends State<Behaviour> {
   late bool vibrate;
+  late bool keepAwake;
   late bool autoTimer;
   late double soundValue;
   late final SharedPreferences shared;
@@ -20,13 +21,15 @@ class _BehaviourState extends State<Behaviour> {
     soundValue = shared.getDouble('soundValue') ?? 5;
     vibrate = shared.getBool('vibrate') ?? true;
     autoTimer = shared.getBool('autoTimer') ?? false;
+    keepAwake = shared.getBool('keepAwake') ?? false;
   }
 
   Future<bool> save() async {
     var saved = false;
     saved = await shared.setBool('vibrate', vibrate);
     saved = await shared.setBool('autoTimer', autoTimer);
-    saved = await shared.setDouble('soundValue', soundValue);
+    saved = await shared.setBool('keepAwake', keepAwake);
+    saved = await shared.setDouble('soundValue', soundValue/10);
     return saved;
   }
 
@@ -41,6 +44,7 @@ class _BehaviourState extends State<Behaviour> {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(color: theme.appBarTheme.titleTextStyle!.color,),
         title: const Text('Behaviour'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,
@@ -85,6 +89,24 @@ class _BehaviourState extends State<Behaviour> {
               ],
             ),
             const SizedBox(
+              height: 8,
+            ),
+            Row(
+              children: [
+                Text('Keep Screen On',
+                    style: Theme.of(context).textTheme.titleSmall),
+                const Spacer(),
+                Switch(
+                  value: keepAwake,
+                  onChanged: (value) {
+                    setState(() {
+                      keepAwake = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(
               height: 24,
             ),
             Row(
@@ -118,6 +140,7 @@ class _BehaviourState extends State<Behaviour> {
                 onPressed: () async {
                   save().then((value) {
                     if (value) {
+                      shouldKeepAlive = false;
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         duration: const Duration(milliseconds: 1500),
                         content: Text(

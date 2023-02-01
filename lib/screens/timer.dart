@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 class Timer extends StatefulWidget {
   const Timer({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _TimerState extends State<Timer>
   late Animation<double> animation;
   late AnimationController controller;
   late AnimationController buttonController;
-  late TimerProvider _provider = TimerProvider();
+  TimerProvider _provider = TimerProvider();
 
   @override
   void initState() {
@@ -27,74 +28,64 @@ class _TimerState extends State<Timer>
     buttonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     controller = AnimationController(
-        duration: Duration(
-            seconds: _provider.task.taskDurations![_provider.index].duration!),
-        vsync: this);
+        duration: Duration(minutes: _provider.getNextRound()), vsync: this);
     final curvedAnimation =
-    CurvedAnimation(parent: controller, curve: Curves.linear);
+        CurvedAnimation(parent: controller, curve: Curves.linear);
     animation =
-    Tween<double>(begin: math.pi * 2, end: 0.0).animate(curvedAnimation)
-      ..addListener(() {
-        _provider.elap =
-        controller.lastElapsedDuration != null ? controller.lastElapsedDuration!
-            .inMilliseconds : _provider.elap;
-        _provider.refreshState();
-      }
-
-      )
-      ..addStatusListener((status) {
-        onComplete(status);
-        if (status == AnimationStatus.completed) {
-          print(_provider.remaining);
-          _provider.checkVibrationAndMusic();
-        }
-      });
+        Tween<double>(begin: math.pi * 2, end: 0.0).animate(curvedAnimation)
+          ..addListener(() {
+            _provider.elap = controller.lastElapsedDuration != null
+                ? controller.lastElapsedDuration!.inMilliseconds
+                : _provider.elap;
+            _provider.refreshState();
+          })
+          ..addStatusListener((status) {
+            onComplete(status);
+            if (status == AnimationStatus.completed) {
+              Wakelock.disable();
+              _provider.checkVibrationAndMusic();
+            }
+          });
   }
 
   void onComplete(AnimationStatus status) {
     if (AnimationStatus.completed == status) {
-      if (_provider.task.taskDurations![_provider.index].category == 0) {
-        _provider.remaining -=
+      if (!_provider
+          .isRest /*_provider.task.taskDurations![_provider.index].category == 0*/) {
+        _provider.totalFocused +=
             ((_provider.elapsed + _provider.elap) / 1000).round();
-
       } else {
         _provider.round += 1;
       }
       _provider.elap = 0;
-      _provider.elapsed=0;
+      _provider.elapsed = 0;
 
-      _provider.task.taskDurations![_provider.index].isCompleted = true;
+      // _provider.task.taskDurations![_provider.index].isCompleted = true;
 
       controller.reset();
       buttonController.reverse();
 
-      if (_provider.index < _provider.task.taskDurations!.length - 1) {
+      if (_provider.index < 7) {
         _provider.index += 1;
       } else {
-
-        _provider.calculateRemaining();
+        // _provider.calculateRemaining();
         _provider.round = 1;
         _provider.index = 0;
         _provider.resetTask();
       }
-      controller.duration =
-          Duration(seconds: _provider.task.taskDurations![_provider.index]
-              .duration!);
+      controller.duration = Duration(minutes: _provider.getNextRound());
     }
     _provider.refreshState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // super.build(context);
-    final size = MediaQuery
-        .of(context)
-        .size;
+    super.build(context);
+    final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     return Consumer<TimerProvider>(
       builder: (builder, model, child) {
         _provider = model;
-        _provider.calculateRemaining();
 
         return Column(
           children: [
@@ -129,16 +120,14 @@ class _TimerState extends State<Timer>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          model.task.title!,
+                          'Total focused time',
                           style: theme.textTheme.titleSmall,
                         ),
                         const SizedBox(
                           height: 4,
                         ),
                         Text(
-                            'Total: ${model.isRest ? model.remaining : model
-                                .remaining - ((model.elapsed + model.elap) ~/
-                                1000)} mins',
+                            '${model.isRest ? model.totalFocused : model.totalFocused + ((model.elapsed + model.elap) ~/ 60000)} mins',
                             style: theme.textTheme.displaySmall!.copyWith(
                                 fontSize: 16, fontWeight: FontWeight.w400)),
                       ],
@@ -148,13 +137,11 @@ class _TimerState extends State<Timer>
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('${model.round} / ${model.task.rounds}',
-                            style: theme.textTheme.titleSmall),
+                        Text('Round', style: theme.textTheme.titleSmall),
                         const SizedBox(
                           height: 4,
                         ),
-                        Text("${model.task.taskDurations![model.index]
-                            .duration} mins",
+                        Text("${model.round} / 4",
                             style: theme.textTheme.displaySmall!.copyWith(
                                 fontSize: 16, fontWeight: FontWeight.w400)),
                       ],
@@ -212,8 +199,7 @@ class _TimerState extends State<Timer>
               padding: const EdgeInsets.only(bottom: 36),
               child: Text(
                   '${model.isRest ? 'Take a break for' : 'Stay focused for'}'
-                      ' ${model.task.taskDurations![model.index]
-                      .duration} minutes',
+                  ' ${model.getNextRound()} minutes',
                   style: theme.textTheme.displaySmall!
                       .copyWith(fontWeight: FontWeight.w400, fontSize: 18)),
             ),
@@ -223,42 +209,67 @@ class _TimerState extends State<Timer>
                 CircleAvatar(
                   radius: 25,
                   child: IconButton(
-                      icon: const Icon(
+                      splashRadius: 25,
+                      icon: Icon(
                         Icons.restart_alt,
-                        color: Colors.white,
+                        color: theme.colorScheme.tertiary,
                       ),
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
+                            return SimpleDialog(
+                              contentPadding: const EdgeInsets.all(24),
+                              surfaceTintColor:
+                                  theme.scaffoldBackgroundColor,
                               title: const Text('Reset'),
-                              content: const Text(
-                                  'This will reset the current progress and current round.'
-                                      '\nProgress made in this round will not be counted.\n\nContinue?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    controller.reset();
-                                    model.resetTask();
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Yes',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('No',
-                                      style: TextStyle(
-                                          fontSize: 18,
+                              titleTextStyle: theme.textTheme.titleLarge!
+                                .copyWith(
+                            fontWeight: FontWeight.w800,
+                                fontSize: 32),
+                              children: [
+                                Text(
+                                    'This will reset the whole session.'
+                                        '\n\nProgress made in this round will not be counted.\n\nContinue?', style: theme.textTheme.titleSmall,),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.green)),
+                                      onPressed: () {
+                                        controller.reset();
+                                        model.resetTask();
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Yes',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                    const SizedBox(width: 20,),
+                                    OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),),side: const BorderSide(
                                           color: Colors.red,
-                                          fontWeight: FontWeight.w500)),
-                                ),
+                                          width: 1.5)),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('No',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                  ],
+                                )
                               ],
                             );
                           },
@@ -268,80 +279,96 @@ class _TimerState extends State<Timer>
                 CircleAvatar(
                   radius: 40,
                   child: IconButton(
+                      splashRadius: 80,
                       icon: AnimatedIcon(
+                        size: 40,
                         progress: buttonController,
                         icon: AnimatedIcons.play_pause,
-                        color: Colors.white,
+                        color: theme.colorScheme.tertiary,
                       ),
                       onPressed: () {
                         if (controller.isAnimating) {
+                          Wakelock.disable();
                           model.elapsed += model.elap;
                           model.elap = 0;
                           controller.stop(canceled: false);
                           buttonController.reverse();
-
                         } else {
+                          if (model.keepAwake) Wakelock.enable();
+
                           controller.forward();
                           buttonController.forward();
                         }
                         model.refreshState();
-                        print(controller.duration!.inMilliseconds -
-                            model.elapsed -
-                            model.elap);
-
                       }),
                 ),
                 CircleAvatar(
                   radius: 25,
                   child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.skip_next,
-                        color: Colors.white,
+                        color: theme.colorScheme.tertiary,
                       ),
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
+                            return SimpleDialog(
+                              contentPadding: const EdgeInsets.all(24),
+                              surfaceTintColor:
+                                  theme.colorScheme.primaryContainer,
                               title: const Text('Switch'),
-                              content: const Text(
+                              titleTextStyle: theme.textTheme.titleLarge!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 32),
+                              children: [
+                                Text(
                                   'This will switch to next round.'
-                                      '\n\nDo you want to add the current round progress?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Dismiss',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500)),
+                                  '\n\nDo you want to add the current round progress?',
+                                  style: theme.textTheme.titleSmall,
                                 ),
-                                const SizedBox(
-                                  width: 50,
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    onComplete(AnimationStatus.completed);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Yes',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('No',
-                                      style: TextStyle(
-                                          fontSize: 18,
+                                const SizedBox(height: 20,),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.green)),
+                                      onPressed: () {
+                                        onComplete(AnimationStatus.completed);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Yes',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),),side: const BorderSide(
                                           color: Colors.red,
-                                          fontWeight: FontWeight.w500)),
-                                ),
+                                          width: 1.5)),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('No',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                  ],
+                                )
                               ],
                             );
                           },
@@ -354,6 +381,12 @@ class _TimerState extends State<Timer>
         );
       },
     );
+  }
+
+  @override
+  void dispose() async {
+    if (await Wakelock.enabled) Wakelock.disable();
+    super.dispose();
   }
 
   @override

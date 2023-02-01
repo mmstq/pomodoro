@@ -3,7 +3,7 @@ import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-final shared = SharedPrefs.instance;
+bool shouldKeepAlive = true;
 
 Route createRoute(Widget newPage) {
   return PageRouteBuilder(
