@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 

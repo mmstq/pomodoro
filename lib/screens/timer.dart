@@ -44,6 +44,8 @@ class _TimerState extends State<Timer>
             if (status == AnimationStatus.completed) {
               Wakelock.disable();
               _provider.checkVibrationAndMusic();
+            }else{
+
             }
           });
   }
@@ -53,7 +55,7 @@ class _TimerState extends State<Timer>
       if (!_provider
           .isRest /*_provider.task.taskDurations![_provider.index].category == 0*/) {
         _provider.totalFocused +=
-            ((_provider.elapsed + _provider.elap) / 1000).round();
+            ((_provider.elapsed + _provider.elap) / 60000).round();
       } else {
         _provider.round += 1;
       }
@@ -74,9 +76,12 @@ class _TimerState extends State<Timer>
         _provider.resetTask();
       }
 
-      controller.duration = Duration(minutes: _provider.getNextRound());
+      // controller.duration = Duration(minutes: _provider.getNextRound());
+    }else if(AnimationStatus.reverse == status){
+      _provider.resetTask();
     }
 
+    controller.duration = Duration(minutes: _provider.getNextRound());
     _provider.refreshState();
     _provider.wakeLockCheck(enable: false);
 
@@ -234,7 +239,7 @@ class _TimerState extends State<Timer>
                                       onPressed: () {
                                         controller.reset();
                                         buttonController.reverse();
-                                        model.resetTask();
+                                        onComplete(AnimationStatus.reverse);
                                         Navigator.pop(context);
                                       },
                                       child: const Text('Yes',

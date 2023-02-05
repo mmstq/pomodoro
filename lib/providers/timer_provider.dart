@@ -47,16 +47,19 @@ class TimerProvider extends ChangeNotifier {
     switch (index) {
       case 7:
         a = shared.getDouble('longRestTime') ?? 15.0;
+        a = 2;
         break;
 
       case 1:
       case 3:
       case 5:
         a = shared.getDouble('restTime') ?? 5.0;
+        a=1;
         break;
 
       default:
         a = shared.getDouble('focusTime') ?? 25;
+        a=3;
         break;
     }
     return a.toInt();
