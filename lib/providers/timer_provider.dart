@@ -13,14 +13,17 @@ class TimerProvider extends ChangeNotifier {
   int round = 1;
   bool keepAwake = false;
 
-  int totalFocused=0;
+  int totalFocused = 0;
   late final SharedPreferences _shared;
 
   // Getters
   SharedPreferences get shared => _shared;
 
+  TimerProvider() {
+    initiation();
+  }
 
-  bool get isRest  {
+  bool get isRest {
     switch (index) {
       case 1:
       case 3:
@@ -29,24 +32,19 @@ class TimerProvider extends ChangeNotifier {
         return true;
       default:
         return false;
+    }
   }
-}
 
-  TimerProvider() {
-    initiation();
-  }
 
 
   void initiation() {
     _shared = SharedPrefs.instance;
-    keepAwake = _shared.getBool('keepAwake')??false;
+    keepAwake = _shared.getBool('keepAwake') ?? false;
   }
 
   int getNextRound() {
-
     var a = 25.0;
     switch (index) {
-
       case 7:
         a = shared.getDouble('longRestTime') ?? 15.0;
         break;
@@ -64,7 +62,6 @@ class TimerProvider extends ChangeNotifier {
     return a.toInt();
   }
 
-
   void checkVibrationAndMusic() {
     if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
     if (shared.getDouble('soundValue') != 0) {
@@ -81,16 +78,7 @@ class TimerProvider extends ChangeNotifier {
               }*/
   }
 
-  @override
-  void dispose() {
-    Wakelock.disable();
-    super.dispose();
-  }
-
-
-
   void refreshState() => notifyListeners();
-
 
   void resetTask() {
     elap = 0;
@@ -98,14 +86,19 @@ class TimerProvider extends ChangeNotifier {
     totalFocused = 0;
     round = 1;
     index = 0;
+    wakeLockCheck(enable: false);
   }
 
-  int get(String key, int defaultValue) {
-    /*if (shared.containsKey(key)) {
-    return shared.getDouble(key)!.toInt();
-  }*/
-    return defaultValue;
+  void wakeLockCheck({required bool enable}) async {
+    if (keepAwake) {
+      if (enable) {
+        Wakelock.enable();
+      } else {
+        Wakelock.disable();
+      }
+    }
   }
+
 
   String formattedTime({required int timeInMilli}) {
     int timeInSecond = timeInMilli ~/ 1000;
@@ -114,5 +107,11 @@ class TimerProvider extends ChangeNotifier {
     String minute = min.toString().length <= 1 ? "0$min" : "$min";
     String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
     return "$minute : $second";
+  }
+
+  @override
+  void dispose() {
+    wakeLockCheck(enable: false);
+    super.dispose();
   }
 }
