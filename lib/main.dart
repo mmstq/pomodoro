@@ -17,8 +17,7 @@ void main() async {
   ));
 }
 
-Future<void> initialization() async{
-
+Future<void> initialization() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SharedPrefs.init();
@@ -43,8 +42,6 @@ Future<void> initialization() async{
       ],
       debug: true
   );*/
-
-
 }
 
 //maven baloo2 rajdhani sairaSemiCondensed itim coda
@@ -81,9 +78,14 @@ class MyApp extends StatelessWidget {
       useMaterial3: true,
       scaffoldBackgroundColor: Colors.grey.shade100,
       colorScheme: const ColorScheme.light(
-        primaryContainer: Colors.white,
-        tertiary: Colors.black87
-
+          primaryContainer: Colors.white, tertiary: Colors.black87),
+      popupMenuTheme: const PopupMenuThemeData(
+        // color: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.black26)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -143,7 +145,14 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: const Color(0xFF1C1F23),
-      cardColor: const Color(0xFF1C1F23),
+      popupMenuTheme: const PopupMenuThemeData(
+        color: Color(0xFF1C1F23),
+        surfaceTintColor: Color(0xFF1C1F23),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.black26)),
+      ),
       sliderTheme: SliderThemeData(
           activeTickMarkColor: Colors.white,
           activeTrackColor: Colors.indigo,
@@ -162,8 +171,7 @@ class MyApp extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10)))),
       fontFamily: "Sofia",
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          unselectedItemColor: Colors.white38,
-          selectedItemColor: Colors.white),
+          unselectedItemColor: Colors.white38, selectedItemColor: Colors.white),
       textTheme: const TextTheme(
           titleSmall: TextStyle(
               //title in sub setting
@@ -186,10 +194,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w900)),
       appBarTheme: AppBarTheme.of(context).copyWith(
           titleTextStyle: const TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Sofia'),
+              fontSize: 20, fontWeight: FontWeight.w500, fontFamily: 'Sofia'),
           iconTheme: const IconThemeData(color: Colors.white)),
       radioTheme:
           RadioThemeData(fillColor: MaterialStateProperty.all(Colors.white70)),

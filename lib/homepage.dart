@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:pomodoro/utils/data.dart';
-import 'package:pomodoro/screens/about.dart';
 import 'package:pomodoro/screens/privacy_policy.dart';
 import 'package:pomodoro/screens/settings.dart';
 import 'package:pomodoro/screens/timer.dart';
@@ -28,27 +27,22 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           PopupMenuButton<String>(
+
+              padding: EdgeInsets.zero,
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(context, createRoute(const About()));
-                    },
-                    child: Text(
-                      'About',
-                      style: theme.textTheme.titleSmall,
-                    ),
-                  ),
-                ),
+                    /*PopupMenuItem<String>(
+                      onTap: () => Future(()=>Navigator.push(context, createRoute(const About()))),
+                      child: Text(
+                        'About       ',
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),*/
                     PopupMenuItem<String>(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(context, createRoute(const Privacy()));
-                        },
-                        child: Text(
-                          'Privacy Policy',
-                          style: theme.textTheme.titleSmall,
-                        ),
+                      onTap: () =>
+                          Future(()=>Navigator.push(context, createRoute(const Privacy()))),
+                      child: Text(
+                        'Privacy Policy',
+                        style: theme.textTheme.titleSmall,
                       ),
                     ),
                   ])

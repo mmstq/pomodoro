@@ -73,9 +73,13 @@ class _TimerState extends State<Timer>
         _provider.index = 0;
         _provider.resetTask();
       }
+
       controller.duration = Duration(minutes: _provider.getNextRound());
     }
+
     _provider.refreshState();
+    _provider.wakeLockCheck(enable: false);
+
   }
 
   @override
@@ -106,7 +110,7 @@ class _TimerState extends State<Timer>
                       decoration: const BoxDecoration(
                           color: Colors.green,
                           shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: const Icon(
                         Icons.access_time_filled,
                         size: 30,
@@ -172,25 +176,12 @@ class _TimerState extends State<Timer>
                       painter: Load(animation.value, Colors.red, false),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      /*await showDurationPicker(
-                          context: context, initialTime: duration)
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            controller.duration = value;
-                          });
-                        }
-                      });*/
-                    },
-                    child: Text(
-                      model.formattedTime(
-                          timeInMilli: controller.duration!.inMilliseconds -
-                              model.elapsed -
-                              model.elap),
-                      style: theme.textTheme.titleLarge,
-                    ),
+                  Text(
+                    model.formattedTime(
+                        timeInMilli: controller.duration!.inMilliseconds -
+                            model.elapsed -
+                            model.elap),
+                    style: theme.textTheme.titleLarge,
                   ),
                 ],
               ),
@@ -242,6 +233,7 @@ class _TimerState extends State<Timer>
                                               Colors.green)),
                                       onPressed: () {
                                         controller.reset();
+                                        buttonController.reverse();
                                         model.resetTask();
                                         Navigator.pop(context);
                                       },
@@ -288,13 +280,13 @@ class _TimerState extends State<Timer>
                       ),
                       onPressed: () {
                         if (controller.isAnimating) {
-                          Wakelock.disable();
+                          model.wakeLockCheck(enable: false);
                           model.elapsed += model.elap;
                           model.elap = 0;
                           controller.stop(canceled: false);
                           buttonController.reverse();
                         } else {
-                          if (model.keepAwake) Wakelock.enable();
+                          model.wakeLockCheck(enable: true);
 
                           controller.forward();
                           buttonController.forward();
@@ -385,7 +377,7 @@ class _TimerState extends State<Timer>
 
   @override
   void dispose() async {
-    if (await Wakelock.enabled) Wakelock.disable();
+    _provider.wakeLockCheck(enable: false);
     super.dispose();
   }
 
