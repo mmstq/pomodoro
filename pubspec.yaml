@@ -45,6 +45,7 @@ dependencies:
   audioplayers: ^2.0.0
   shared_preferences:
   wakelock:
+  flutter_background:
 #  awesome_notifications:
 #  notification_permissions: ^0.6.1
 #  sqflite:

@@ -9,9 +9,7 @@ class Privacy extends StatelessWidget {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          color: theme.appBarTheme.titleTextStyle!.color,
-        ),
+        leading: BackButton(color: theme.appBarTheme.iconTheme!.color,),
         title: const Text('Privacy Policy'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,
@@ -84,7 +82,6 @@ class Privacy extends StatelessWidget {
                           color: Colors.blue),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('he');
                         })
                 ]))
               ],

@@ -42,7 +42,7 @@ class _IntervalsState extends State<Intervals> {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(color: theme.appBarTheme.titleTextStyle!.color,),
+        leading: BackButton(color: theme.appBarTheme.iconTheme!.color,),
         title: const Text('Intervals'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,

@@ -44,7 +44,7 @@ class _BehaviourState extends State<Behaviour> {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(color: theme.appBarTheme.titleTextStyle!.color,),
+        leading: BackButton(color: theme.appBarTheme.iconTheme!.color,),
         title: const Text('Behaviour'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,

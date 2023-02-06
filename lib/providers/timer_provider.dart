@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -13,9 +14,10 @@ class TimerProvider extends ChangeNotifier {
   int round = 1;
   bool keepAwake = false;
 
+
   int totalFocused = 0;
   late final SharedPreferences _shared;
-
+  late final FlutterBackgroundAndroidConfig androidConfig;
   // Getters
   SharedPreferences get shared => _shared;
 
@@ -37,9 +39,18 @@ class TimerProvider extends ChangeNotifier {
 
 
 
-  void initiation() {
+  void initiation()  {
     _shared = SharedPrefs.instance;
     keepAwake = _shared.getBool('keepAwake') ?? false;
+    androidConfig = const FlutterBackgroundAndroidConfig(
+      notificationTitle: "flutter_background example app",
+      notificationText: "Background notification for keeping the example app running in the background",
+      notificationImportance: AndroidNotificationImportance.Default,
+      notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'), // Default is ic_launcher from folder mipmap
+    );
+    FlutterBackground.initialize(androidConfig: androidConfig);
+    FlutterBackground.enableBackgroundExecution();
+
   }
 
   int getNextRound() {

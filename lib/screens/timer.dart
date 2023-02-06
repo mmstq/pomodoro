@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'dart:math' as math;
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class _TimerState extends State<Timer>
 
   void initiation() {
     buttonController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 400));
     controller = AnimationController(
         duration: Duration(minutes: _provider.getNextRound()), vsync: this);
     final curvedAnimation =
@@ -383,6 +384,7 @@ class _TimerState extends State<Timer>
   @override
   void dispose() async {
     _provider.wakeLockCheck(enable: false);
+    FlutterBackground.disableBackgroundExecution();
     super.dispose();
   }
 
