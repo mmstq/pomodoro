@@ -49,7 +49,6 @@ class TimerProvider extends ChangeNotifier {
       notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'), // Default is ic_launcher from folder mipmap
     );
     FlutterBackground.initialize(androidConfig: androidConfig);
-    FlutterBackground.enableBackgroundExecution();
 
   }
 
@@ -104,8 +103,10 @@ class TimerProvider extends ChangeNotifier {
   }
 
   void wakeLockCheck({required bool enable}) async {
+    FlutterBackground.enableBackgroundExecution();
     if (keepAwake) {
       if (enable) {
+        
         Wakelock.enable();
       } else {
         Wakelock.disable();

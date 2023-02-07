@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/screens/privacy_policy.dart';
 import 'package:pomodoro/screens/settings.dart';
+import 'package:flutter/services.dart';
 import 'package:pomodoro/screens/timer.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
@@ -18,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
   final List<String> title = ['Focus', /*'Tasks', 'Analytics',*/ 'Settings'];
 
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -27,7 +30,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           PopupMenuButton<String>(
-
               padding: EdgeInsets.zero,
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                     /*PopupMenuItem<String>(
@@ -38,8 +40,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),*/
                     PopupMenuItem<String>(
-                      onTap: () =>
-                          Future(()=>Navigator.push(context, createRoute(const Privacy()))),
+                      onTap: () async{
+                        try {
+                          final int result = await platform.invokeMethod('start');
+                        } on PlatformException catch (e) {
+                          print(e.message);
+                        }
+                      },
+                      // Future(()=>Navigator.push(context, createRoute(const Privacy()))),
                       child: Text(
                         'Privacy Policy',
                         style: theme.textTheme.titleSmall,

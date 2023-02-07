@@ -25,6 +25,7 @@ class _TimerState extends State<Timer>
     initiation();
   }
 
+
   void initiation() {
     buttonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
@@ -39,13 +40,16 @@ class _TimerState extends State<Timer>
                 ? controller.lastElapsedDuration!.inMilliseconds
                 : _provider.elap;
             _provider.refreshState();
+            print('hey');
           })
           ..addStatusListener((status) {
             onComplete(status);
             if (status == AnimationStatus.completed) {
               Wakelock.disable();
               _provider.checkVibrationAndMusic();
-            }else{
+            }else if(status == AnimationStatus.forward){
+              FlutterBackground.initialize();
+              FlutterBackground.enableBackgroundExecution();
 
             }
           });
@@ -89,7 +93,7 @@ class _TimerState extends State<Timer>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext   context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
@@ -293,7 +297,6 @@ class _TimerState extends State<Timer>
                           buttonController.reverse();
                         } else {
                           model.wakeLockCheck(enable: true);
-
                           controller.forward();
                           buttonController.forward();
                         }

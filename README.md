@@ -1,6 +1,6 @@
 # What is Pomodoro App?
 
-The secret to effective time management is...thinking in tomatoes rather than hours? It may seem silly at first, but millions of people swear by the life-changing power to the Pomodoro Technique. ( Pomodoro is Italian for tomato. 🍅 )
+The secret to effective time management is...thinking in tomatoes (minutes) rather than hours? It may seem silly at first, but millions of people swear by the life-changing power to the Pomodoro Technique. ( Pomodoro is Italian for tomato. 🍅 )
 
 This App helps you break your task into small fragments. It helps you to take a break after every 25 minutes so that you can focus for a longer time. Breaks help you stay focused for longer periods.
 
