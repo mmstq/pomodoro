@@ -40,16 +40,18 @@ class _TimerState extends State<Timer>
                 ? controller.lastElapsedDuration!.inMilliseconds
                 : _provider.elap;
             _provider.refreshState();
-            print('hey');
           })
           ..addStatusListener((status) {
             onComplete(status);
             if (status == AnimationStatus.completed) {
+              _provider.sendMessageToNative(methodName: "stopService");
               Wakelock.disable();
               _provider.checkVibrationAndMusic();
             }else if(status == AnimationStatus.forward){
-              FlutterBackground.initialize();
-              FlutterBackground.enableBackgroundExecution();
+              print("start");
+              _provider.sendMessageToNative(methodName: "startService");
+              /*FlutterBackground.initialize();
+              FlutterBackground.enableBackgroundExecution();*/
 
             }
           });
@@ -387,7 +389,7 @@ class _TimerState extends State<Timer>
   @override
   void dispose() async {
     _provider.wakeLockCheck(enable: false);
-    FlutterBackground.disableBackgroundExecution();
+    // FlutterBackground.disableBackgroundExecution();
     super.dispose();
   }
 

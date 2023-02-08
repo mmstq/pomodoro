@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:pomodoro/utils/data.dart';
-import 'package:pomodoro/screens/privacy_policy.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pomodoro/screens/settings.dart';
-import 'package:flutter/services.dart';
 import 'package:pomodoro/screens/timer.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
@@ -16,10 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const methodChannel = MethodChannel("com.mmstq.pomodoro/method");
   final PageController pageController = PageController();
   int index = 0;
   final List<String> title = ['Focus', /*'Tasks', 'Analytics',*/ 'Settings'];
+
+  @override
+  void initState() {
+    super.initState();
+    Permission.notification.request();
+  }
 
 
   @override
@@ -43,14 +46,7 @@ class _HomePageState extends State<HomePage> {
                     PopupMenuItem<String>(
                       onTap: () async{
 
-                        try{
-                          await methodChannel.invokeListMethod("startService").then((value) {
-                            print(value);
 
-                          });
-                        }on PlatformException catch(e){
-                          print(e.details);
-                        }
                       },
                       // Future(()=>Navigator.push(context, createRoute(const Privacy()))),
                       child: Text(

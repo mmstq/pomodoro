@@ -1,5 +1,6 @@
 package com.mmstq.pomo.pomodoro
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
@@ -10,21 +11,27 @@ import androidx.core.app.NotificationCompat
 
 class NotificationService : Service() {
 
-    override fun onCreate() {
-        super.onCreate()
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            println("hello")
+
+            val channel = NotificationChannel(
+                "messages",
+                "messages",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
             val builder = NotificationCompat.Builder(this, "messages")
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("textTitle")
                 .setContentText("textContent")
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
             startForeground(101, builder.build())
-
-
         }
-
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onBind(p0: Intent?): IBinder? {

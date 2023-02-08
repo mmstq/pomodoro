@@ -1,5 +1,7 @@
 package com.mmstq.pomo.pomodoro
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -13,46 +15,47 @@ class MainActivity: FlutterActivity() {
 
     private val METHOD_CHANNEL_NAME = "com.mmstq.pomodoro/method"
     private var methodChannel:MethodChannel? = null
-    /*override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        GeneratedPluginRegistrant.registerWith(this)
-        MethodChannel(flutterView, "messages").setMethodCallHandler {
-            call, resutl ->
-                if (call.method == "start"){
-                    print("hello")
-                }
-        }
-    }*/
+    private var intent:Intent? = null
+
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-
+        intent = Intent(this, NotificationService::class.java)
         setupChannels(this, flutterEngine.dartExecutor.binaryMessenger)
 
     }
 
     private fun setupChannels(context: Context, messenger: BinaryMessenger) {
+
         methodChannel = MethodChannel(messenger, METHOD_CHANNEL_NAME)
-        methodChannel!!.setMethodCallHandler{ call, resut ->
-            if (call.method == "startService"){
-                print("start bro")
-                val a = listOf(1,2,3)
-                resut.success(a)
-            }else{
-                resut.notImplemented()
+        methodChannel!!.setMethodCallHandler{ call, result ->
+
+            when (call.method) {
+                "startService" -> {
+                    startNotificationService()
+                    result.success(listOf("Successfully Started"))
+
+                }
+                "stopService" -> {
+                    stopService()
+                    result.success(listOf("Successfully Stopped"))
+                }
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
     }
-
-
-
-    fun startNotificationService() {
-        val intent = Intent(this, NotificationService::class.java)
+    private fun startNotificationService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         }else{
             startService(intent)
         }
+    }
+
+    private fun stopService(){
+        stopService(intent);
     }
 
 }

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,9 @@ class TimerProvider extends ChangeNotifier {
 
 
   int totalFocused = 0;
+
+  static const methodChannel = MethodChannel("com.mmstq.pomodoro/method");
+
   late final SharedPreferences _shared;
   late final FlutterBackgroundAndroidConfig androidConfig;
   // Getters
@@ -42,13 +46,13 @@ class TimerProvider extends ChangeNotifier {
   void initiation()  {
     _shared = SharedPrefs.instance;
     keepAwake = _shared.getBool('keepAwake') ?? false;
-    androidConfig = const FlutterBackgroundAndroidConfig(
+   /* androidConfig = const FlutterBackgroundAndroidConfig(
       notificationTitle: "flutter_background example app",
       notificationText: "Background notification for keeping the example app running in the background",
       notificationImportance: AndroidNotificationImportance.Default,
       notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'), // Default is ic_launcher from folder mipmap
     );
-    FlutterBackground.initialize(androidConfig: androidConfig);
+    FlutterBackground.initialize(androidConfig: androidConfig);*/
 
   }
 
@@ -91,6 +95,20 @@ class TimerProvider extends ChangeNotifier {
               }*/
   }
 
+  Future<bool> sendMessageToNative({required String methodName}) async{
+    try{
+      await methodChannel.invokeListMethod(methodName).then((value) {
+        print(value);
+        return value;
+
+      });
+    }on PlatformException catch(e){
+      print(e.details);
+      return false;
+    }
+    return false;
+  }
+
   void refreshState() => notifyListeners();
 
   void resetTask() {
@@ -99,14 +117,16 @@ class TimerProvider extends ChangeNotifier {
     totalFocused = 0;
     round = 1;
     index = 0;
+    sendMessageToNative(methodName: "stopService");
     wakeLockCheck(enable: false);
   }
 
+
   void wakeLockCheck({required bool enable}) async {
-    FlutterBackground.enableBackgroundExecution();
+    // FlutterBackground.enableBackgroundExecution();
     if (keepAwake) {
       if (enable) {
-        
+
         Wakelock.enable();
       } else {
         Wakelock.disable();
