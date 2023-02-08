@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const methodChannel = MethodChannel("com.mmstq.pomodoro/method");
   final PageController pageController = PageController();
   int index = 0;
   final List<String> title = ['Focus', /*'Tasks', 'Analytics',*/ 'Settings'];
@@ -41,10 +42,14 @@ class _HomePageState extends State<HomePage> {
                     ),*/
                     PopupMenuItem<String>(
                       onTap: () async{
-                        try {
-                          final int result = await platform.invokeMethod('start');
-                        } on PlatformException catch (e) {
-                          print(e.message);
+
+                        try{
+                          await methodChannel.invokeListMethod("startService").then((value) {
+                            print(value);
+
+                          });
+                        }on PlatformException catch(e){
+                          print(e.details);
                         }
                       },
                       // Future(()=>Navigator.push(context, createRoute(const Privacy()))),
