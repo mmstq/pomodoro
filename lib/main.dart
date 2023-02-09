@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:pomodoro/screens/test.dart';
 import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/homepage.dart';
 import 'package:pomodoro/providers/theme_mode_notifier.dart';
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   await initialization();
@@ -19,29 +22,18 @@ void main() async {
 
 Future<void> initialization() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // BackgroundIsolateBinaryMessenger.ensureInitialized();
+  Workmanager().initialize(callbackDispatcher);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SharedPrefs.init();
-  /*AwesomeNotifications().initialize(
-    // set the icon to null if you want to use the default app icon
-      null,
-      [
-        NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: const Color(0xFF9D50DD),
-            onlyAlertOnce: true,
-            ledColor: Colors.white)
-      ],
-      // Channel groups are only visual and are not required
-      channelGroups: [
-        NotificationChannelGroup(
-            channelGroupKey: 'basic_channel_group',
-            channelGroupName: 'Basic group')
-      ],
-      debug: true
-  );*/
+}
+
+void callbackDispatcher(){
+  return Workmanager().executeTask((taskName, inputData) {
+    print('hey');
+    return Future.value(true);
+
+  });
 }
 
 //maven baloo2 rajdhani sairaSemiCondensed itim coda

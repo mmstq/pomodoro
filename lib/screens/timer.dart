@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_background/flutter_background.dart';
 import 'dart:math' as math;
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:workmanager/workmanager.dart';
 
 class Timer extends StatefulWidget {
   const Timer({Key? key}) : super(key: key);
@@ -44,12 +44,14 @@ class _TimerState extends State<Timer>
           ..addStatusListener((status) {
             onComplete(status);
             if (status == AnimationStatus.completed) {
-              _provider.sendMessageToNative(methodName: "stopService");
+              // _provider.sendMessageToNative(methodName: "stopService");
               Wakelock.disable();
-              _provider.checkVibrationAndMusic();
+              // _provider.checkVibrationAndMusic();
             }else if(status == AnimationStatus.forward){
-              print("start");
-              _provider.sendMessageToNative(methodName: "startService");
+              _provider.setRemainder(controller.duration!, DateTime.new.toString());
+              // Workmanager().registerOneOffTask('focus', 'timer', initialDelay: controller.duration!);
+              // print("start");
+              // _provider.sendMessageToNative(methodName: "startService");
               /*FlutterBackground.initialize();
               FlutterBackground.enableBackgroundExecution();*/
 

@@ -1,15 +1,12 @@
 package com.mmstq.pomo.pomodoro
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
-
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
+import java.util.*
 
 class MainActivity: FlutterActivity() {
 
@@ -21,11 +18,11 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         intent = Intent(this, NotificationService::class.java)
-        setupChannels(this, flutterEngine.dartExecutor.binaryMessenger)
+        setupChannels(flutterEngine.dartExecutor.binaryMessenger)
 
     }
 
-    private fun setupChannels(context: Context, messenger: BinaryMessenger) {
+    private fun setupChannels(messenger: BinaryMessenger) {
 
         methodChannel = MethodChannel(messenger, METHOD_CHANNEL_NAME)
         methodChannel!!.setMethodCallHandler{ call, result ->

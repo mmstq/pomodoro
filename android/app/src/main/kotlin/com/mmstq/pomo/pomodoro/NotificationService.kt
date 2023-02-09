@@ -25,7 +25,6 @@ class NotificationService : Service() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
             val builder = NotificationCompat.Builder(this, "messages")
-                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("textTitle")
                 .setContentText("textContent")
                 .setOngoing(true)

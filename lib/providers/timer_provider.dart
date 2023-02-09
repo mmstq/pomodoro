@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:isolate';
+
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background/flutter_background.dart';
@@ -6,6 +10,7 @@ import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:workmanager/workmanager.dart';
 
 class TimerProvider extends ChangeNotifier {
   // Variables
@@ -76,26 +81,24 @@ class TimerProvider extends ChangeNotifier {
         a=3;
         break;
     }
-    return a.toInt();
+    return 1;
   }
 
-  void checkVibrationAndMusic() {
-    if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
-    if (shared.getDouble('soundValue') != 0) {
-      var audio = AudioPlayer();
-      audio.setVolume(shared.getDouble('soundValue') ?? 5);
-      audio.play(AssetSource('audio/finish.mp3'));
-    }
 
-    /*if (shared.getBool('autoTimer') ?? false) {
-                controller.forward();
-                setState(() {
-                  buttonController.forward();
-                });
-              }*/
+
+  void setRemainder(Duration duration, String message){
+    Isolate.spawn((message) {
+      Timer(duration,(){
+        checkVibrationAndMusic();
+
+      });
+      // Workmanager().registerOneOffTask('uniqueName', 'taskName', initialDelay: duration);
+    }, message);
+
   }
 
-  Future<bool> sendMessageToNative({required String methodName}) async{
+ /* Future<bool> sendMessageToNative({required String methodName}) async{
+
     try{
       await methodChannel.invokeListMethod(methodName).then((value) {
         print(value);
@@ -107,7 +110,7 @@ class TimerProvider extends ChangeNotifier {
       return false;
     }
     return false;
-  }
+  }*/
 
   void refreshState() => notifyListeners();
 
@@ -117,7 +120,7 @@ class TimerProvider extends ChangeNotifier {
     totalFocused = 0;
     round = 1;
     index = 0;
-    sendMessageToNative(methodName: "stopService");
+    // sendMessageToNative(methodName: "stopService");
     wakeLockCheck(enable: false);
   }
 
@@ -149,4 +152,20 @@ class TimerProvider extends ChangeNotifier {
     wakeLockCheck(enable: false);
     super.dispose();
   }
+}
+
+void checkVibrationAndMusic(SharedPreferences shared) async {
+  if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
+  if (shared.getDouble('soundValue') != 0) {
+    var audio = AudioPlayer();
+    audio.setVolume(shared.getDouble('soundValue') ?? 5);
+    audio.play(AssetSource('audio/finish.mp3'));
+  }
+
+  /*if (shared.getBool('autoTimer') ?? false) {
+                controller.forward();
+                setState(() {
+                  buttonController.forward();
+                });
+              }*/
 }

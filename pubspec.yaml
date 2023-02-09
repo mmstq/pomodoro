@@ -45,6 +45,8 @@ dependencies:
   shared_preferences:
   wakelock:
   flutter_background:
+  android_long_task: ^1.0.0
+  workmanager:
 #  awesome_notifications:
 #  notification_permissions: ^0.6.1
 #  sqflite:
