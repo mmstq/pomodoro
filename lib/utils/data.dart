@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-bool shouldKeepAlive = true;
-
 Route createRoute(Widget newPage) {
   return PageRouteBuilder(
       pageBuilder: (context, animation, secondAnimation) => newPage,
@@ -16,17 +13,8 @@ Route createRoute(Widget newPage) {
       });
 }
 
-
-int get(String key, int defaultValue){
-  /*if (shared.containsKey(key)) {
-    return shared.getDouble(key)!.toInt();
-  }*/
-  return defaultValue;
-}
-
 class SharedPrefs {
   static late final SharedPreferences instance;
-
   static Future<SharedPreferences> init() async =>
       instance = await SharedPreferences.getInstance();
 }

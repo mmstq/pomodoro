@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:pomodoro/screens/privacy_policy.dart';
 import 'package:pomodoro/screens/settings.dart';
 import 'package:pomodoro/screens/timer.dart';
+import 'package:pomodoro/utils/data.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,9 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Permission.notification.request();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +42,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),*/
                     PopupMenuItem<String>(
-                      onTap: () async{
-
-
-                      },
-                      // Future(()=>Navigator.push(context, createRoute(const Privacy()))),
+                      onTap: ()=>
+                      Future(()=>Navigator.push(context, createRoute(const Privacy()))),
                       child: Text(
                         'Privacy Policy',
                         style: theme.textTheme.titleSmall,

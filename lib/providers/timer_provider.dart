@@ -1,16 +1,12 @@
-import 'dart:async';
-import 'dart:isolate';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_background/flutter_background.dart';
 import 'package:pomodoro/utils/data.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:workmanager/workmanager.dart';
 
 class TimerProvider extends ChangeNotifier {
   // Variables
@@ -18,15 +14,15 @@ class TimerProvider extends ChangeNotifier {
   int elap = 0; // the duration happened during single round
   int index = 0;
   int round = 1;
-  bool keepAwake = false;
 
-
+  // bool keepAwake = false;
   int totalFocused = 0;
+  late double brightness;
 
-  static const methodChannel = MethodChannel("com.mmstq.pomodoro/method");
+  // static const methodChannel = MethodChannel("com.mmstq.pomodoro/method");
 
   late final SharedPreferences _shared;
-  late final FlutterBackgroundAndroidConfig androidConfig;
+
   // Getters
   SharedPreferences get shared => _shared;
 
@@ -46,18 +42,9 @@ class TimerProvider extends ChangeNotifier {
     }
   }
 
-
-
-  void initiation()  {
+  void initiation() async {
     _shared = SharedPrefs.instance;
-    keepAwake = _shared.getBool('keepAwake') ?? false;
-   /* androidConfig = const FlutterBackgroundAndroidConfig(
-      notificationTitle: "flutter_background example app",
-      notificationText: "Background notification for keeping the example app running in the background",
-      notificationImportance: AndroidNotificationImportance.Default,
-      notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'), // Default is ic_launcher from folder mipmap
-    );
-    FlutterBackground.initialize(androidConfig: androidConfig);*/
+    brightness = await ScreenBrightness().current;
 
   }
 
@@ -66,41 +53,28 @@ class TimerProvider extends ChangeNotifier {
     switch (index) {
       case 7:
         a = shared.getDouble('longRestTime') ?? 15.0;
-        a = 2;
+        // a = 2;
         break;
 
       case 1:
       case 3:
       case 5:
         a = shared.getDouble('restTime') ?? 5.0;
-        a=1;
+        // a = 1;
         break;
 
       default:
         a = shared.getDouble('focusTime') ?? 25;
-        a=3;
+        // a = 3;
         break;
     }
-    return 1;
+    return a.toInt();
   }
 
-
-
-  void setRemainder(Duration duration, String message){
-    Isolate.spawn((message) {
-      Timer(duration,(){
-        checkVibrationAndMusic();
-
-      });
-      // Workmanager().registerOneOffTask('uniqueName', 'taskName', initialDelay: duration);
-    }, message);
-
-  }
-
- /* Future<bool> sendMessageToNative({required String methodName}) async{
+  /* Future<bool> sendMessageToNative({required String methodName, required int minutes}) async{
 
     try{
-      await methodChannel.invokeListMethod(methodName).then((value) {
+      await methodChannel.invokeListMethod(methodName,[minutes]).then((value) {
         print(value);
         return value;
 
@@ -124,19 +98,41 @@ class TimerProvider extends ChangeNotifier {
     wakeLockCheck(enable: false);
   }
 
+  void checkVibrationAndMusic() async {
+    if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
+    if (shared.getDouble('soundValue') != 0) {
+      var audio = AudioPlayer();
+      audio.setVolume(shared.getDouble('soundValue') ?? 0.5);
+      audio.play(AssetSource('audio/finish.mp3'));
+    }
 
-  void wakeLockCheck({required bool enable}) async {
-    // FlutterBackground.enableBackgroundExecution();
-    if (keepAwake) {
+    /*if (shared.getBool('autoTimer') ?? false) {
+                controller.forward();
+                setState(() {
+                  buttonController.forward();
+                });
+              }*/
+  }
+
+  void checkLowBrightnessMode({required bool enable}) {
+    if (_shared.getBool('lowBrightnessMode') ?? true) {
       if (enable) {
-
-        Wakelock.enable();
+        Future.delayed(const Duration(milliseconds: 500),
+            () => ScreenBrightness().setScreenBrightness(0.03));
       } else {
-        Wakelock.disable();
+        ScreenBrightness().resetScreenBrightness();
       }
     }
   }
 
+  void wakeLockCheck({required bool enable}) {
+    checkLowBrightnessMode(enable: enable);
+    if (enable) {
+      Future.delayed(const Duration(milliseconds: 300),()=>Wakelock.enable());
+    } else {
+      Wakelock.disable();
+    }
+  }
 
   String formattedTime({required int timeInMilli}) {
     int timeInSecond = timeInMilli ~/ 1000;
@@ -152,20 +148,4 @@ class TimerProvider extends ChangeNotifier {
     wakeLockCheck(enable: false);
     super.dispose();
   }
-}
-
-void checkVibrationAndMusic(SharedPreferences shared) async {
-  if (shared.getBool('vibrate') ?? true) Vibration.vibrate();
-  if (shared.getDouble('soundValue') != 0) {
-    var audio = AudioPlayer();
-    audio.setVolume(shared.getDouble('soundValue') ?? 5);
-    audio.play(AssetSource('audio/finish.mp3'));
-  }
-
-  /*if (shared.getBool('autoTimer') ?? false) {
-                controller.forward();
-                setState(() {
-                  buttonController.forward();
-                });
-              }*/
 }

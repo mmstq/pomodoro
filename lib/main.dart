@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:pomodoro/screens/test.dart';
 import 'package:pomodoro/utils/data.dart';
 import 'package:pomodoro/homepage.dart';
 import 'package:pomodoro/providers/theme_mode_notifier.dart';
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 
 void main() async {
   await initialization();
@@ -22,18 +19,8 @@ void main() async {
 
 Future<void> initialization() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // BackgroundIsolateBinaryMessenger.ensureInitialized();
-  Workmanager().initialize(callbackDispatcher);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SharedPrefs.init();
-}
-
-void callbackDispatcher(){
-  return Workmanager().executeTask((taskName, inputData) {
-    print('hey');
-    return Future.value(true);
-
-  });
 }
 
 //maven baloo2 rajdhani sairaSemiCondensed itim coda
@@ -69,6 +56,7 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: Colors.grey.shade100,
+      dialogBackgroundColor: Colors.white,
       colorScheme: const ColorScheme.light(
           primaryContainer: Colors.white, tertiary: Colors.black87),
       popupMenuTheme: const PopupMenuThemeData(
@@ -145,6 +133,7 @@ class MyApp extends StatelessWidget {
         style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Colors.black26)),
       ),
+      dialogBackgroundColor: const Color(0xFF16181A),
       sliderTheme: SliderThemeData(
           activeTickMarkColor: Colors.white,
           activeTrackColor: Colors.indigo,

@@ -12,7 +12,7 @@ class Behaviour extends StatefulWidget {
 class _BehaviourState extends State<Behaviour> {
   late bool vibrate;
   late bool keepAwake;
-  late bool autoTimer;
+  late bool lowBrightnessMode;
   late double soundValue;
   late final SharedPreferences shared;
 
@@ -20,14 +20,14 @@ class _BehaviourState extends State<Behaviour> {
     shared = SharedPrefs.instance;
     soundValue = shared.getDouble('soundValue') ?? 5;
     vibrate = shared.getBool('vibrate') ?? true;
-    autoTimer = shared.getBool('autoTimer') ?? false;
+    lowBrightnessMode = shared.getBool('lowBrightnessMode') ?? true;
     keepAwake = shared.getBool('keepAwake') ?? false;
   }
 
   Future<bool> save() async {
     var saved = false;
     saved = await shared.setBool('vibrate', vibrate);
-    saved = await shared.setBool('autoTimer', autoTimer);
+    saved = await shared.setBool('lowBrightnessMode', lowBrightnessMode);
     saved = await shared.setBool('keepAwake', keepAwake);
     saved = await shared.setDouble('soundValue', soundValue/10);
     return saved;
@@ -57,14 +57,14 @@ class _BehaviourState extends State<Behaviour> {
           children: [
             Row(
               children: [
-                Text('Auto Start Timer',
+                Text('Low Brightness Mode',
                     style: Theme.of(context).textTheme.titleSmall),
                 const Spacer(),
                 Switch(
-                  value: autoTimer,
+                  value: lowBrightnessMode,
                   onChanged: (value) {
                     setState(() {
-                      autoTimer = value;
+                      lowBrightnessMode = value;
                     });
                   },
                 ),
@@ -88,7 +88,7 @@ class _BehaviourState extends State<Behaviour> {
                 ),
               ],
             ),
-            const SizedBox(
+            /*const SizedBox(
               height: 8,
             ),
             Row(
@@ -105,7 +105,7 @@ class _BehaviourState extends State<Behaviour> {
                   },
                 ),
               ],
-            ),
+            ),*/
             const SizedBox(
               height: 24,
             ),
@@ -140,7 +140,6 @@ class _BehaviourState extends State<Behaviour> {
                 onPressed: () async {
                   save().then((value) {
                     if (value) {
-                      shouldKeepAlive = false;
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         duration: const Duration(milliseconds: 1500),
                         content: Text(

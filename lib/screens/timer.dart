@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:workmanager/workmanager.dart';
 
 class Timer extends StatefulWidget {
   const Timer({Key? key}) : super(key: key);
@@ -25,7 +25,6 @@ class _TimerState extends State<Timer>
     initiation();
   }
 
-
   void initiation() {
     buttonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
@@ -44,25 +43,17 @@ class _TimerState extends State<Timer>
           ..addStatusListener((status) {
             onComplete(status);
             if (status == AnimationStatus.completed) {
-              // _provider.sendMessageToNative(methodName: "stopService");
-              Wakelock.disable();
-              // _provider.checkVibrationAndMusic();
-            }else if(status == AnimationStatus.forward){
-              _provider.setRemainder(controller.duration!, DateTime.new.toString());
-              // Workmanager().registerOneOffTask('focus', 'timer', initialDelay: controller.duration!);
-              // print("start");
-              // _provider.sendMessageToNative(methodName: "startService");
-              /*FlutterBackground.initialize();
-              FlutterBackground.enableBackgroundExecution();*/
-
-            }
+              _provider.wakeLockCheck(enable: false);
+              _provider.checkVibrationAndMusic();
+            } /*else if (status == AnimationStatus.forward) {
+              Wakelock.enable();
+            }*/
           });
   }
 
   void onComplete(AnimationStatus status) {
     if (AnimationStatus.completed == status) {
-      if (!_provider
-          .isRest /*_provider.task.taskDurations![_provider.index].category == 0*/) {
+      if (!_provider.isRest) {
         _provider.totalFocused +=
             ((_provider.elapsed + _provider.elap) / 60000).round();
       } else {
@@ -71,33 +62,27 @@ class _TimerState extends State<Timer>
       _provider.elap = 0;
       _provider.elapsed = 0;
 
-      // _provider.task.taskDurations![_provider.index].isCompleted = true;
-
       controller.reset();
       buttonController.reverse();
 
       if (_provider.index < 7) {
         _provider.index += 1;
       } else {
-        // _provider.calculateRemaining();
         _provider.round = 1;
         _provider.index = 0;
         _provider.resetTask();
       }
-
-      // controller.duration = Duration(minutes: _provider.getNextRound());
-    }else if(AnimationStatus.reverse == status){
+    } else if (AnimationStatus.reverse == status) {
       _provider.resetTask();
     }
 
     controller.duration = Duration(minutes: _provider.getNextRound());
     _provider.refreshState();
     _provider.wakeLockCheck(enable: false);
-
   }
 
   @override
-  Widget build(BuildContext   context) {
+  Widget build(BuildContext context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
@@ -180,7 +165,7 @@ class _TimerState extends State<Timer>
                     width: 200,
                     child: CustomPaint(
                       painter: Load(
-                          math.pi * 2, Colors.white54.withOpacity(0.03), true),
+                          math.pi * 2, theme.colorScheme.primaryContainer.withOpacity(0.6), true),
                     ),
                   ),
                   SizedBox(
@@ -201,7 +186,7 @@ class _TimerState extends State<Timer>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 36),
+              padding: const EdgeInsets.only(bottom: 48, top: 16),
               child: Text(
                   '${model.isRest ? 'Take a break for' : 'Stay focused for'}'
                   ' ${model.getNextRound()} minutes',
@@ -212,7 +197,7 @@ class _TimerState extends State<Timer>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CircleAvatar(
-                  radius: 25,
+                  radius: 30,
                   child: IconButton(
                       splashRadius: 25,
                       icon: Icon(
@@ -225,26 +210,30 @@ class _TimerState extends State<Timer>
                           builder: (BuildContext context) {
                             return SimpleDialog(
                               contentPadding: const EdgeInsets.all(24),
-                              surfaceTintColor:
-                                  theme.scaffoldBackgroundColor,
+                              surfaceTintColor: theme.scaffoldBackgroundColor,
                               title: const Text('Reset'),
                               titleTextStyle: theme.textTheme.titleLarge!
-                                .copyWith(
-                            fontWeight: FontWeight.w800,
-                                fontSize: 32),
+                                  .copyWith(
+                                      color: theme.textTheme.titleSmall!.color,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 32),
                               children: [
                                 Text(
-                                    'This will reset the whole session.'
-                                        '\n\nProgress made in this round will not be counted.\n\nContinue?', style: theme.textTheme.titleSmall,),
-                                const SizedBox(height: 20,),
+                                  'This will reset the whole session.'
+                                  '\n\nProgress made in this round will not be counted.\n\nContinue?',
+                                  style: theme.textTheme.titleSmall,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.green)),
+                                              MaterialStateProperty.all(
+                                                  Colors.green)),
                                       onPressed: () {
                                         controller.reset();
                                         buttonController.reverse();
@@ -257,14 +246,17 @@ class _TimerState extends State<Timer>
                                               color: Colors.white,
                                               fontWeight: FontWeight.w500)),
                                     ),
-                                    const SizedBox(width: 20,),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
                                     OutlinedButton(
                                       style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),),side: const BorderSide(
-                                          color: Colors.red,
-                                          width: 1.5)),
+                                                BorderRadius.circular(10),
+                                          ),
+                                          side: const BorderSide(
+                                              color: Colors.red, width: 1.5)),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -283,9 +275,9 @@ class _TimerState extends State<Timer>
                       }),
                 ),
                 CircleAvatar(
-                  radius: 40,
+                  radius: 45,
                   child: IconButton(
-                      splashRadius: 80,
+                      splashRadius: 120,
                       icon: AnimatedIcon(
                         size: 40,
                         progress: buttonController,
@@ -308,7 +300,7 @@ class _TimerState extends State<Timer>
                       }),
                 ),
                 CircleAvatar(
-                  radius: 25,
+                  radius: 30,
                   child: IconButton(
                       icon: Icon(
                         Icons.skip_next,
@@ -320,21 +312,21 @@ class _TimerState extends State<Timer>
                           builder: (BuildContext context) {
                             return SimpleDialog(
                               contentPadding: const EdgeInsets.all(24),
-                              surfaceTintColor:
-                                  theme.colorScheme.primaryContainer,
                               title: const Text('Switch'),
+                              surfaceTintColor: theme.scaffoldBackgroundColor,
                               titleTextStyle: theme.textTheme.titleLarge!
                                   .copyWith(
+                                  color: theme.textTheme.titleSmall!.color,
                                       fontWeight: FontWeight.w800,
                                       fontSize: 32),
                               children: [
                                 Text(
-                                  'This will switch to next round.'
-                                  '\n\nDo you want to add the current round progress?',
+                                  'This will switch to next round.',
                                   style: theme.textTheme.titleSmall,
                                 ),
-                                const SizedBox(height: 20,),
-
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -359,10 +351,11 @@ class _TimerState extends State<Timer>
                                     OutlinedButton(
                                       style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),),side: const BorderSide(
-                                          color: Colors.red,
-                                          width: 1.5)),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          side: const BorderSide(
+                                              color: Colors.red, width: 1.5)),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -391,7 +384,6 @@ class _TimerState extends State<Timer>
   @override
   void dispose() async {
     _provider.wakeLockCheck(enable: false);
-    // FlutterBackground.disableBackgroundExecution();
     super.dispose();
   }
 
@@ -421,7 +413,7 @@ class Load extends CustomPainter {
       ..color = progressColor
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = isBackground ? 12 : 15;
+      ..strokeWidth = isBackground ? 12 : 14;
 
     if (!isBackground) {
       paint.shader = gradient.createShader(rect);
