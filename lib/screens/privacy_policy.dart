@@ -23,11 +23,12 @@ class Privacy extends StatelessWidget {
               children: [
                 Text(
                   "This Privacy Policy is about an Android application provided free, known as Focus Timer on the Google Play Store."
-                  " This application does not collect, transmit, or store any user's personal information.\n\nHowever we collect some information about your device when the application crashes."
-                  " This data is very important for us as this helps us to improve and fix bugs in this application so that we can provide better user experience.",
+                  " This application does not collect, transmit, or store any user's personal information.",
+                  ///*\n\nHowever we collect some information about your device when the application crashes."
+                  //                   " This data is very important for us as this helps us to improve and fix bugs in this application so that we can provide better user experience."*/
                   style: theme.textTheme.titleSmall,
                 ),
-                const SizedBox(
+                /*const SizedBox(
                   height: 24,
                 ),
                 Padding(
@@ -55,7 +56,7 @@ class Privacy extends StatelessWidget {
                     '\n9. In-app purchases',
                     style: theme.textTheme.titleSmall,
                   ),
-                ),
+                ),*/
                 const SizedBox(
                   height: 32,
                 ),
