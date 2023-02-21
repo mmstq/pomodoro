@@ -18,9 +18,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 ## Screenshots
 
 <p align="left">
-  <img src="screenshots/ss5.png" width="180">
-  <img src="screenshots/ss4.png" width="180">
-  <img src="screenshots/ss3.png" width="180" style="margin: 10px">
+  <img src="screenshots/ss5.png" width="180"> &nbsp;&nbsp;&nbsp; <img src="screenshots/ss4.png" width="180"> &nbsp;&nbsp;&nbsp; <img src="screenshots/ss3.png" width="180">
 </p>
 
 <p align="left">
