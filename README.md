@@ -17,7 +17,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 ## Screenshots
 
-<img src="screenshots/ss5.png" width="150">
+<img src="screenshots/ss5.png" width="180">
 
 to discuss what you would like to change.
 
