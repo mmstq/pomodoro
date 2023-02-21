@@ -17,7 +17,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 ## Screenshots
 
-![Alt text](screenshots/ss5.png width=100)
+![Alt text](screenshots/ss5.png?width=100)
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
