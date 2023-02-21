@@ -17,6 +17,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 ## Screenshots
 
+
 <p align="left">
   <img src="screenshots/ss5.png" width="180"> &nbsp;&nbsp;&nbsp; <img src="screenshots/ss4.png" width="180"> &nbsp;&nbsp;&nbsp; <img src="screenshots/ss3.png" width="180">
 </p>
@@ -24,6 +25,11 @@ This App helps you break your task into small fragments. It helps you to take a 
 <p align="left">
   <img src="screenshots/ss2.png" width="180"> &nbsp;&nbsp;&nbsp; <img src="screenshots/ss1.png" width="180">
 </p>
+
+## Insights
+1. State Management = **Provider**
+2. Used custom painter to draw custom shapes
+3. Published on **Play Store**
 
 
 ## License
