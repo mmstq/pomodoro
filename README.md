@@ -20,7 +20,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 <p align="left">
   <img src="screenshots/ss5.png" width="180">
   <img src="screenshots/ss4.png" width="180">
-  <img src="screenshots/ss3.png" width="180">
+  <img src="screenshots/ss3.png" width="180" style="margin: 10px">
 </p>
 
 <p align="left">
@@ -28,9 +28,6 @@ This App helps you break your task into small fragments. It helps you to take a 
   <img src="screenshots/ss1.png" width="180">
 </p>
 
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 
