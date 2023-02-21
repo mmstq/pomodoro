@@ -17,11 +17,13 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 ## Screenshots
 
-<img src="screenshots/ss5.png" width="180">
-<img src="screenshots/ss5.png" width="180">
-<img src="screenshots/ss5.png" width="180">
-<img src="screenshots/ss5.png" width="180">
-<img src="screenshots/ss5.png" width="180">
+<p align="middle">
+  <img src="screenshots/ss5.png" width="180">
+  <img src="screenshots/ss5.png" width="180">
+  <img src="screenshots/ss5.png" width="180">
+  <img src="screenshots/ss5.png" width="180">
+  <img src="screenshots/ss5.png" width="180">
+</p>
 
 to discuss what you would like to change.
 
