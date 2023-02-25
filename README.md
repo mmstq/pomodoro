@@ -10,7 +10,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 
 #### Download from Play Store:
 
-<a href="https://play.google.com/store/apps/details?id=com.mmstq.pomo.pomodoro">
+<a href="https://play.google.com/store/apps/details?id=com.mmstq.pomo.pomodoro" target="_blank">
   <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="180"/>
   <a/>
 
