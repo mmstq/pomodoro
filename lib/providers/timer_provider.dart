@@ -6,7 +6,7 @@ import 'package:pomodoro/utils/data.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class TimerProvider extends ChangeNotifier {
   // Variables
@@ -128,9 +128,9 @@ class TimerProvider extends ChangeNotifier {
   void wakeLockCheck({required bool enable}) {
     checkLowBrightnessMode(enable: enable);
     if (enable) {
-      Future.delayed(const Duration(milliseconds: 300),()=>Wakelock.enable());
+      Future.delayed(const Duration(milliseconds: 300),()=>WakelockPlus.enable());
     } else {
-      Wakelock.disable();
+      WakelockPlus.disable();
     }
   }
 

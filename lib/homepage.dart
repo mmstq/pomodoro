@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             index = i;
           });
           pageController.animateToPage(index,
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.easeOutQuad);
         },
         iconSize: 25,
