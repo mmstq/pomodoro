@@ -8,7 +8,7 @@ This App helps you break your task into small fragments. It helps you to take a 
 ## Installation
 
 
-#### The application is on Play Store:
+#### Download from Play Store:
 
 <a href="https://play.google.com/store/apps/details?id=com.mmstq.pomo.pomodoro">
   <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="180"/>
