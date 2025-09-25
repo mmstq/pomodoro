@@ -57,7 +57,7 @@ class _IntervalsState extends State<Intervals> {
               children: [
                 Text('Focus Duration', style: theme.textTheme.titleSmall),
                 const Spacer(),
-                Text('• ${focusTime.toInt()}      ', style: theme.textTheme.titleSmall),
+                Text('• ${focusTime.toInt()} mins     ', style: theme.textTheme.titleSmall),
               ],
             ),
             Slider(
@@ -85,7 +85,7 @@ class _IntervalsState extends State<Intervals> {
               children: [
                 Text('Short Rest Duration', style: theme.textTheme.titleSmall),
                 const Spacer(),
-                Text('• ${restTime.toInt()}      ', style: theme.textTheme.titleSmall),
+                Text('• ${restTime.toInt()} mins     ', style: theme.textTheme.titleSmall),
               ],
             ),
             Slider(
@@ -113,7 +113,7 @@ class _IntervalsState extends State<Intervals> {
               children: [
                 Text('Long Rest Duration', style: theme.textTheme.titleSmall),
                 const Spacer(),
-                Text('• ${longRestTime.toInt()}      ', style: theme.textTheme.titleSmall),
+                Text('• ${longRestTime.toInt()} mins     ', style: theme.textTheme.titleSmall),
               ],
             ),
             Slider(

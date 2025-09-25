@@ -209,7 +209,8 @@ class _TimerState extends State<Timer>
                             return SimpleDialog(
                               contentPadding: const EdgeInsets.all(24),
                               surfaceTintColor: theme.scaffoldBackgroundColor,
-                              title: const Text('Reset'),
+                              backgroundColor: theme.scaffoldBackgroundColor,
+                              title: const Text('Reset?'),
                               titleTextStyle: theme.textTheme.titleLarge!
                                   .copyWith(
                                       color: theme.textTheme.titleSmall!.color,
@@ -231,14 +232,11 @@ class _TimerState extends State<Timer>
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                                  Colors.green)),
+                                                  Colors.red[400])),
                                       onPressed: () {
-                                        controller.reset();
-                                        buttonController.reverse();
-                                        onComplete(AnimationStatus.reverse);
                                         Navigator.pop(context);
                                       },
-                                      child: const Text('Yes',
+                                      child: Text('No',
                                           style: TextStyle(
                                               fontSize: 18,
                                               color: Colors.white,
@@ -247,21 +245,21 @@ class _TimerState extends State<Timer>
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          side: const BorderSide(
-                                              color: Colors.red, width: 1.5)),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.lightGreen[500])),
                                       onPressed: () {
+                                        controller.reset();
+                                        buttonController.reverse();
+                                        onComplete(AnimationStatus.reverse);
                                         Navigator.pop(context);
                                       },
-                                      child: const Text('No',
+                                      child: Text('Yes',
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color: Colors.red,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.w500)),
                                     ),
                                   ],
@@ -310,7 +308,8 @@ class _TimerState extends State<Timer>
                           builder: (BuildContext context) {
                             return SimpleDialog(
                               contentPadding: const EdgeInsets.all(24),
-                              title: const Text('Switch'),
+                              title: const Text('Next Round?'),
+                              backgroundColor: theme.scaffoldBackgroundColor,
                               surfaceTintColor: theme.scaffoldBackgroundColor,
                               titleTextStyle: theme.textTheme.titleLarge!
                                   .copyWith(
@@ -319,7 +318,7 @@ class _TimerState extends State<Timer>
                                       fontSize: 32),
                               children: [
                                 Text(
-                                  'This will switch to next round.',
+                                  'Move on to the next round?',
                                   style: theme.textTheme.titleSmall,
                                 ),
                                 const SizedBox(
@@ -331,8 +330,26 @@ class _TimerState extends State<Timer>
                                     ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.green)),
+                                          MaterialStateProperty.all(
+                                              Colors.red[400])),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('No',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500)),
+                                    )
+,
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.green[500])),
                                       onPressed: () {
                                         onComplete(AnimationStatus.completed);
                                         Navigator.pop(context);
@@ -342,27 +359,7 @@ class _TimerState extends State<Timer>
                                               fontSize: 18,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w500)),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          side: const BorderSide(
-                                              color: Colors.red, width: 1.5)),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('No',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
+                                    )
                                   ],
                                 )
                               ],

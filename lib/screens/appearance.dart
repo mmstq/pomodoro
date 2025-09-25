@@ -15,7 +15,9 @@ class _AppearanceState extends State<Appearance> {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(color: theme.appBarTheme.iconTheme!.color,),
+        leading: BackButton(
+          color: theme.appBarTheme.iconTheme!.color,
+        ),
         title: const Text('Appearance'),
         backgroundColor: theme.colorScheme.primaryContainer,
         elevation: 0,
@@ -32,49 +34,88 @@ class _AppearanceState extends State<Appearance> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
                     'Choose Theme',
-                    style: theme.textTheme.titleMedium!.copyWith(fontSize: 22,fontWeight: FontWeight.w400),
+                    style: theme.textTheme.titleMedium!
+                        .copyWith(fontSize: 22, fontWeight: FontWeight.w400),
                   ),
                 ),
-                ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: Text(
-                      'Light',
-                      style: Theme.of(context).textTheme.titleSmall,
+                SizedBox(
+                  height: 4,
+                ),
+                GestureDetector(
+                  onTap: () => model.changeTheme(0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Light',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Spacer(),
+                        Radio<int>(
+                          value: 0,
+                          groupValue: model.themeMode,
+                          activeColor: Colors.indigo.shade500,
+                          onChanged: (int? value) {
+                            model.changeTheme(value!);
+                          },
+                        )
+                      ],
                     ),
-                    trailing: Radio<int>(
-                      value: 0,
-                      groupValue: model.themeMode,
-                      activeColor: Colors.indigo.shade500,
-                      onChanged: (int? value) {
-                        model.changeTheme(value!);
-                      },
-                    )),
-                ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: Text(
-                      'Dark',
-                      style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                GestureDetector(
+                  onTap: () => model.changeTheme(1),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Dark',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Spacer(),
+                        Radio<int>(
+                          value: 1,
+                          groupValue: model.themeMode,
+                          activeColor: Colors.indigo.shade500,
+                          onChanged: (int? value) {
+                            model.changeTheme(value!);
+                          },
+                        )
+                      ],
                     ),
-                    trailing: Radio<int>(
-                      value: 1,
-                      activeColor: Colors.indigo.shade500,
-                      groupValue: model.themeMode,
-                      onChanged: (int? value) {
-                        model.changeTheme(value!);
-                      },
-                    )),
-                ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: Text('System',
-                        style: Theme.of(context).textTheme.titleSmall),
-                    trailing: Radio<int>(
-                      value: 2,
-                      activeColor: Colors.indigo.shade500,
-                      groupValue: model.themeMode,
-                      onChanged: (int? value) {
-                        model.changeTheme(value!);
-                      },
-                    )),
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                GestureDetector(
+                  onTap: () => model.changeTheme(2),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'System',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Spacer(),
+                        Radio<int>(
+                          value: 2,
+                          groupValue: model.themeMode,
+                          activeColor: Colors.indigo.shade500,
+                          onChanged: (int? value) {
+                            model.changeTheme(value!);
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 8,
                 ),
