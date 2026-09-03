@@ -3,7 +3,7 @@ import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Intervals extends StatefulWidget {
-  const Intervals({Key? key}) : super(key: key);
+  const Intervals({super.key});
 
   @override
   State<Intervals> createState() => _IntervalsState();

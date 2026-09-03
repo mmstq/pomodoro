@@ -3,7 +3,7 @@ import 'package:pomodoro/providers/theme_mode_notifier.dart';
 import 'package:provider/provider.dart';
 
 class Appearance extends StatefulWidget {
-  const Appearance({Key? key}) : super(key: key);
+  const Appearance({super.key});
 
   @override
   State<Appearance> createState() => _AppearanceState();

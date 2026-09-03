@@ -7,7 +7,7 @@ import 'package:pomodoro/utils/data.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -68,40 +68,42 @@ class _HomePageState extends State<HomePage> {
           Setting(),
         ],
       ),
-      bottomNavigationBar: SlidingClippedNavBar(
-        backgroundColor: theme.colorScheme.primaryContainer,
-        onButtonPressed: (i) {
-          setState(() {
-            index = i;
-          });
-          pageController.animateToPage(index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutQuad);
-        },
-        iconSize: 25,
-        inactiveColor: theme.bottomNavigationBarTheme.unselectedItemColor,
-        activeColor: theme.bottomNavigationBarTheme.selectedItemColor!,
-        selectedIndex: index,
-        barItems: [
-          BarItem(
-            icon: Icons.timelapse_rounded,
-            title: 'Timer',
-          ),
-          /* BarItem(
-            icon: Icons.task_alt,
-            title: 'Tasks',
-          ),
-          BarItem(
-            icon: Icons.pie_chart,
-            title: 'Analytics',
-          ),*/
-          BarItem(
-            icon: Icons.settings,
-            title: 'Settings',
-          ),
+      bottomNavigationBar: SafeArea(
+        child: SlidingClippedNavBar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          onButtonPressed: (i) {
+            setState(() {
+              index = i;
+            });
+            pageController.animateToPage(index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutQuad);
+          },
+          iconSize: 25,
+          inactiveColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+          activeColor: theme.bottomNavigationBarTheme.selectedItemColor!,
+          selectedIndex: index,
+          barItems: [
+            BarItem(
+              icon: Icons.timelapse_rounded,
+              title: 'Timer',
+            ),
+            /* BarItem(
+              icon: Icons.task_alt,
+              title: 'Tasks',
+            ),
+            BarItem(
+              icon: Icons.pie_chart,
+              title: 'Analytics',
+            ),*/
+            BarItem(
+              icon: Icons.settings,
+              title: 'Settings',
+            ),
 
-          /// Add more BarItem if you want
-        ],
+            /// Add more BarItem if you want
+          ],
+        ),
       ),
     );
   }

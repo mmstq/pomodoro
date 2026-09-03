@@ -4,7 +4,7 @@ import 'package:pomodoro/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 class Timer extends StatefulWidget {
-  const Timer({Key? key}) : super(key: key);
+  const Timer({super.key});
 
   @override
   State<Timer> createState() => _TimerState();

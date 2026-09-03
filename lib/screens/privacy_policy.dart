@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class Privacy extends StatelessWidget {
-  const Privacy({Key? key}) : super(key: key);
+  const Privacy({super.key});
 
   @override
   Widget build(BuildContext context) {

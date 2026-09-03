@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class Analytics extends StatefulWidget {
-  const Analytics({Key? key}) : super(key: key);
+  const Analytics({super.key});
 
   @override
   State<Analytics> createState() => _AnalyticsState();

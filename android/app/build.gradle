@@ -51,7 +51,6 @@ android {
         applicationId "com.mmstq.pomo.pomodoro"
         minSdkVersion flutter.minSdkVersion
         compileSdk 36
-        targetSdkVersion 36
 
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

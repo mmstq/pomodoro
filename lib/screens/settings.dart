@@ -5,7 +5,7 @@ import 'package:pomodoro/screens/behaviour.dart';
 import 'package:pomodoro/screens/interval_setting.dart';
 
 class Setting extends StatefulWidget {
-  const Setting({Key? key}) : super(key: key);
+  const Setting({super.key});
 
   @override
   State<Setting> createState() => _SettingState();

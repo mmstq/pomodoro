@@ -3,7 +3,7 @@ import 'package:pomodoro/utils/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Behaviour extends StatefulWidget {
-  const Behaviour({Key? key}) : super(key: key);
+  const Behaviour({super.key});
 
   @override
   State<Behaviour> createState() => _BehaviourState();
